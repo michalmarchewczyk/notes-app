@@ -34,8 +34,67 @@ export default {
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/firebase'
   ],
+
+  firebase: {
+    config: {
+      apiKey: process.env.API_KEY,
+      authDomain: process.env.AUTH_DOMAIN,
+      projectId: process.env.PROJECT_ID,
+      storageBucket: process.env.STORAGE_BUCKET,
+      messagingSenderId: process.env.MESSAGING_SENDER_ID,
+      appId: process.env.APP_ID
+    },
+    services: {
+      auth: {
+        persistence: 'local', // default
+        initialize: {
+          onAuthStateChangedMutation: 'user/ON_AUTH_STATE_CHANGED_MUTATION',
+          onAuthStateChangedAction: 'user/onAuthStateChangedAction',
+          subscribeManually: false
+        },
+        ssr: true // default
+        // emulatorPort: 9099,
+        // emulatorHost: 'http://localhost',
+        // disableEmulatorWarnings: true
+      },
+      firestore: {
+        memoryOnly: false, // default
+        chunkName: process.env.NODE_ENV !== 'production' ? 'firebase-auth' : '[id]', // default
+        // enablePersistence: false
+        enablePersistence: {
+          synchronizeTabs: true
+        }
+        // emulatorPort: 8080,
+        // emulatorHost: 'localhost'
+        // settings: {
+        //   // Firestore Settings - currently only works in SPA mode
+        // }
+      }
+    }
+  },
+
+  pwa: {
+    meta: {
+      name: 'Marchewczyk.notes'
+    },
+    manifest: {
+      name: 'Marchewczyk.notes',
+      start_url: '/'
+    },
+    workbox: {
+      enabled: true,
+      // offlineStrategy: 'NetworkFirst',
+      offlineStrategy: 'CacheFirst',
+      // offlineStrategy: 'StaleWhileRevalidate',
+      importScripts: [
+        '/firebase-auth-sw.js'
+      ]
+      // dev: process.env.NODE_ENV === 'development'
+    }
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
