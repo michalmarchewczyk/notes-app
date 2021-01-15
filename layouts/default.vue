@@ -1,6 +1,7 @@
 <template>
   <div>
-    <Nuxt />
+    <NavBar />
+    <Nuxt class="pt-32 absolute block px-4 w-full" />
   </div>
 </template>
 
