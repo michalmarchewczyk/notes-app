@@ -15,6 +15,7 @@ export default {
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
     '@/assets/styles/utils.scss',
+    '@/assets/fonts/fonts.css',
     '@/assets/styles/main.scss',
     '@/assets/styles/scrollbar.scss'
   ],
