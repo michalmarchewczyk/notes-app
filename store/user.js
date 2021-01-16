@@ -1,7 +1,7 @@
 export const state = () => ({
   logged: false,
   user: null,
-  loading: true,
+  loading: false,
   error: null
 })
 
