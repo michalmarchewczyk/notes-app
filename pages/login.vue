@@ -79,6 +79,7 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'Login',
+  middleware: ['route-guard-logged-out'],
   data: () => ({
     email: '',
     password: ''

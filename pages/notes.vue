@@ -25,6 +25,7 @@ import Note from '@/components/Note'
 
 export default {
   name: 'Notes',
+  middleware: ['route-guard-logged-in'],
   components: { Note },
   computed: {
     ...mapState('notes', ['notes', 'moreAvailable', 'loading'])
