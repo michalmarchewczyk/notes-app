@@ -19,7 +19,7 @@ export const actions = {
         commit('setLoading', false)
       })
   },
-  async signOut ({ commit }) {
+  async signOut ({ commit, rootActions, dispatch }) {
     commit('setLoading', true)
     await this.$fire.auth.signOut()
       .then(() => {
@@ -47,7 +47,10 @@ export const actions = {
       })
   },
   onAuthStateChangedAction ({ commit, dispatch }, { authUser }) {
-    console.log('actions', authUser)
+    console.log('actionUser', authUser)
+    if (!authUser) {
+      dispatch('notes/loadNotes', {}, { root: true })
+    }
   }
 }
 

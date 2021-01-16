@@ -40,6 +40,12 @@
       <img src="~/assets/images/logotype-notes-white.svg" alt="">
     </NuxtLink>
     <div v-if="logged">
+      <NuxtLink to="/notes">
+        <button>
+          Notes
+        </button>
+      </NuxtLink>
+      <hr class="inline-block relative w-0.5 h-10 t-0 m-0 mr-5 bg-white z-10 align-top rounded mt-0.5">
       <span>
         {{ user.displayName }}
       </span>
@@ -89,6 +95,7 @@ nav {
   //box-shadow: 0 -22px 16px 20px rgba(0,0,0,0.4);
   width: 100vw;
   height: 3.5em;
+  @apply select-none;
 
   svg {
     display: block;

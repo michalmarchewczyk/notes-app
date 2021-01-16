@@ -1,0 +1,122 @@
+<template>
+  <div class="absolute h-full w-full">
+    <div class="t-0 l-0 w-full h-full p-4 flex pb-0">
+      <div ref="notesList" class="notes-list relative h-full w-96 p-2 mr-4 pt-0" @scroll="scroll">
+        <!--    <AddNote />-->
+        <button class="text-white text-center border-2 border-white p-4 py-2 w-full outline-none focus:outline-none font-bold sticky top-0 bg-black z-10" @click="noteAdd">
+          Add Note
+        </button>
+        <transition-group name="list" tag="div">
+          <Note v-for="note in notes" :key="note.id" :note="note" @del="noteDel" />
+        </transition-group>
+      </div>
+      <div class="h-full w-full text-white  px-2">
+        <NuxtChild />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapState } from 'vuex'
+// import AddNote from '@/components/AddNote'
+import Note from '@/components/Note'
+
+export default {
+  name: 'Notes',
+  components: { Note },
+  computed: {
+    ...mapState('notes', ['notes', 'moreAvailable', 'loading'])
+  },
+  async beforeMount () {
+    console.log('LOADING')
+    await this.loadNotes()
+
+    const notesList = this.$refs.notesList
+    let loaded = (notesList.scrollHeight > notesList.clientHeight + 800)
+
+    while (!loaded) {
+      await this.loadMoreNotes()
+      // console.log(notesList.scrollHeight)
+      // console.log(notesList.clientHeight)
+      if (notesList.scrollHeight > notesList.clientHeight + 800) {
+        loaded = true
+      }
+      if (!this.moreAvailable) {
+        loaded = true
+      }
+    }
+
+    console.log('DONE LOADING')
+  },
+  methods: {
+    ...mapActions('notes', ['addNote', 'loadNotes', 'loadMoreNotes']),
+    scroll () {
+      const notesList = this.$refs.notesList
+      if (!this.loading && notesList.scrollTop >= (notesList.scrollHeight - notesList.offsetHeight - 400)) {
+        this.loadMoreNotes()
+      }
+    },
+    noteAdd () {
+      console.log('noteAdd')
+      this.addNote({ name: 'New note', value: '' })
+    },
+    noteDel () {
+      console.log('noteDel')
+      this.loadMore()
+    },
+    async loadMore () {
+      const notesList = this.$refs.notesList
+      let loaded = (notesList.scrollHeight > notesList.clientHeight + 800)
+
+      console.log('loaded:', loaded)
+
+      while (!loaded) {
+        await this.loadMoreNotes()
+        if (notesList.scrollHeight > notesList.clientHeight + 800) {
+          loaded = true
+        }
+        if (!this.moreAvailable) {
+          loaded = true
+        }
+      }
+    }
+  }
+
+}
+</script>
+
+<style scoped lang='scss'>
+
+.notes-list {
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  button {
+    box-shadow: 0 6px 0 black;
+  }
+}
+
+.list-item {
+  transition: all 0.2s ease, opacity 0.2s cubic-bezier(0.5, 0, 0.75, 0);
+}
+
+.list-enter {
+  //opacity: 0;
+  transform: translateY(-9rem);
+}
+
+.list-leave-to {
+  opacity: 0;
+  height: 0;
+  margin-top: -0.5rem;
+  margin-bottom: -0.5rem;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.list-leave-active {
+  transition: all 0.2s ease, opacity 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+</style>

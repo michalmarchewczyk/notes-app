@@ -1,7 +1,7 @@
 <template>
   <div>
     <NavBar />
-    <Nuxt class="pt-32 absolute block px-4 w-full" />
+    <Nuxt class="pt-24 absolute block px-4 w-full" />
   </div>
 </template>
 
