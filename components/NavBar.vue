@@ -7,6 +7,18 @@
         fill-opacity="0.8"
         stroke="url(#svg-grad)"
         stroke-width="5"
+        class="invisible lg:visible"
+      />
+      <path
+        d="M49 82H-36V-72L2048 -59L2042 73.5H1568.5
+        C1296.5 73.5 1050.5 70.5 818.5 70.5
+        C553.5 70.5 222.5 82 49 82
+        Z"
+        fill="black"
+        fill-opacity="0.8"
+        stroke="url(#svg-grad)"
+        stroke-width="5"
+        class="lg:invisible"
       />
       <defs>
         <linearGradient id="svg-grad" x1="-200%" y1="0%" x2="100%" y2="0%">
@@ -36,8 +48,9 @@
       </defs>
     </svg>
 
-    <NuxtLink to="/" class="nav_logo">
-      <img src="~/assets/images/logotype-notes-white.svg" alt="">
+    <NuxtLink to="/" class="nav_logo w-24 mx-0 md:w-96 md:-mx-3 ">
+      <img src="~/assets/images/logotype-notes-white.svg" alt="" class="invisible md:visible w-full">
+      <img src="~/assets/images/logo.svg" alt="" class="md:invisible w-22 ml-3">
     </NuxtLink>
     <div v-if="logged">
       <NuxtLink to="/notes">
@@ -46,7 +59,7 @@
         </button>
       </NuxtLink>
       <hr class="inline-block relative w-0.5 h-10 t-0 m-0 mr-5 bg-white z-10 align-top rounded mt-0.5">
-      <span>
+      <span class="hidden md:inline-block">
         {{ user.displayName }}
       </span>
       <button @click="logout">
@@ -111,8 +124,8 @@ nav {
     display: inline-block;
     position: relative;
     height: 3em;
-    width: 15em;
-    margin-left: 0.1em;
+    //width: 15em;
+    //margin-left: 0.1em;
     text-decoration: none;
     user-select: none;
     z-index: 10;
@@ -120,7 +133,6 @@ nav {
     img {
       position: absolute;
       height: 2.4em;
-      width: 15em;
       top: 0.35em;
       left: 0em;
     }
@@ -138,7 +150,7 @@ nav {
     }
 
     span {
-      display: inline-block;
+      //display: inline-block;
       position: relative;
       outline: none;
       border: none;

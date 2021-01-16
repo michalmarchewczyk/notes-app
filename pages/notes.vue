@@ -1,18 +1,19 @@
 <template>
   <div class="absolute h-full w-full">
-    <div class="t-0 l-0 w-full h-full p-4 flex pb-0">
-      <div ref="notesList" class="notes-list relative h-full w-96 p-2 mr-4 pt-0" @scroll="scroll">
-        <!--    <AddNote />-->
-        <button class="text-white text-center border-2 border-white p-4 py-2 w-full outline-none focus:outline-none font-bold sticky top-0 bg-black z-10" @click="noteAdd">
-          Add Note
-        </button>
-        <transition-group name="list" tag="div">
-          <Note v-for="note in notes" :key="note.id" :note="note" @del="noteDel" />
-        </transition-group>
+    <div class="t-0 l-0 w-full h-full p-4 flex pb-0 md:gap-4 max-w-screen-xl mx-auto">
+      <div class="w-0 md:w-96 overflow-x-hidden flex-grow">
+        <div ref="notesList" class="notes-list relative h-full  p-2 pt-0" @scroll="scroll">
+          <!--    <AddNote />-->
+          <button class="text-white text-center border-2 border-white p-4 py-2 w-full outline-none focus:outline-none font-bold sticky top-0 bg-black z-10" @click="noteAdd">
+            Add Note
+          </button>
+          <transition-group name="list" tag="div">
+            <Note v-for="note in notes" :key="note.id" :note="note" @del="noteDel" />
+          </transition-group>
+        </div>
       </div>
-      <div class="h-full w-full text-white  px-2">
-        <NuxtChild />
-      </div>
+
+      <NuxtChild class="h-full w-full text-white px-2 " />
     </div>
   </div>
 </template>
