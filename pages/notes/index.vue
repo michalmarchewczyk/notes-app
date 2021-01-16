@@ -9,6 +9,11 @@
 </template>
 
 <script>
+export default {
+  head: () => ({
+    title: 'Notes - Marchewczyk.notes'
+  })
+}
 </script>
 
 <style scoped>

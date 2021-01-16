@@ -3,7 +3,11 @@
 </template>
 
 <script>
-export default {}
+export default {
+  head: () => ({
+    title: 'Marchewczyk.notes'
+  })
+}
 </script>
 
 <style>

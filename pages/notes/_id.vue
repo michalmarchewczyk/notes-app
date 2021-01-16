@@ -38,6 +38,9 @@ import { mapActions, mapGetters, mapState } from 'vuex'
 import moment from 'moment'
 
 export default {
+  head: () => ({
+    title: 'Notes - Marchewczyk.notes'
+  }),
   computed: {
     ...mapState('notes', ['loading']),
     ...mapGetters('notes', [

@@ -97,6 +97,9 @@ export default {
     email: '',
     password: ''
   }),
+  head: () => ({
+    title: 'Register - Marchewczyk.notes'
+  }),
   computed: mapState('user', ['error', 'user', 'logged', 'loading']),
   beforeMount () {
     this.setError('')

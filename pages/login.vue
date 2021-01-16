@@ -79,11 +79,14 @@ import { mapState, mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'Login',
-  middleware: ['route-guard-logged-out'],
   data: () => ({
     email: '',
     password: ''
   }),
+  head: () => ({
+    title: 'Login - Marchewczyk.notes'
+  }),
+  middleware: ['route-guard-logged-out'],
   computed: mapState('user', ['error', 'user', 'logged', 'loading']),
   beforeMount () {
     this.setError('')

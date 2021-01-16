@@ -8,7 +8,7 @@ export default {
       { hid: 'description', name: 'description', content: '' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/icon.png' }
     ]
   },
 
@@ -82,7 +82,8 @@ export default {
 
   pwa: {
     meta: {
-      name: 'Marchewczyk.notes'
+      name: 'Marchewczyk.notes',
+      theme_color: '#000000'
     },
     manifest: {
       name: 'Marchewczyk.notes',
