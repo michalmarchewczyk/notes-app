@@ -4,7 +4,7 @@ export default {
     title: 'Marchewczyk.notes',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=0.8, maximum-scale=0.8, minimum-scale=0.8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=0.8, maximum-scale=5, minimum-scale=0.8' },
       { hid: 'description', name: 'description', content: 'Simple notes app' }
     ],
     link: [
@@ -32,13 +32,12 @@ export default {
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss'
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/pwa'
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
-    // https://go.nuxtjs.dev/pwa
-    '@nuxtjs/pwa',
     '@nuxtjs/firebase'
   ],
 

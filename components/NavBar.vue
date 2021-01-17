@@ -37,8 +37,8 @@
     </svg>
 
     <NuxtLink to="/" class="nav_logo w-24 mx-0 lg:w-96 lg:-mx-3 ">
-      <img src="~/assets/images/logotype-notes-white.svg" alt="" class="invisible lg:visible w-full">
-      <img src="~/assets/images/logo.svg" alt="" class="lg:invisible w-22 ml-3">
+      <img src="~/assets/images/logotype-notes-white.svg" alt="Marchewczyk.notes" class="invisible lg:visible w-full">
+      <img src="~/assets/images/logo.svg" alt="Marchewczyk.notes" class="lg:invisible w-22 ml-3">
     </NuxtLink>
     <div v-if="logged">
       <NuxtLink to="/notes">
