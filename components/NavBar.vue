@@ -96,6 +96,7 @@ nav {
   //box-shadow: 0 -22px 16px 20px rgba(0,0,0,0.4);
   width: 100vw;
   height: 3.5em;
+  overflow-x: hidden;
   @apply select-none;
 
   svg {

@@ -1,11 +1,11 @@
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    title: 'marchewczyk-notes',
+    title: 'Marchewczyk.notes',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { name: 'viewport', content: 'width=device-width, initial-scale=0.8, maximum-scale=0.8, minimum-scale=0.8' },
+      { hid: 'description', name: 'description', content: 'Simple notes app' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/icon.png' }
