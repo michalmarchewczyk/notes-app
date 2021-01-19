@@ -39,6 +39,7 @@ export const actions = {
       .then(() => {
         commit('setError', '')
         commit('setLoading', false)
+        commit('setDisplayName', payload.name)
         return this.$router.push('/')
       })
       .catch((error) => {
@@ -74,15 +75,21 @@ export const mutations = {
       state.user = null
       state.logged = false
     } else {
-      const { displayName, email, uid } = authUser
-      state.user = { displayName, email, uid }
+      const { email, uid } = authUser
+      state.user = { email, uid }
+      if (authUser.displayName) {
+        state.user = { ...state.user, displayName: authUser.displayName }
+      }
       if (authUser.photoURL) {
-        state.user.photoURL = authUser.photoURL
+        state.user = { ...state.user, photoURL: authUser.photoURL }
       }
       state.logged = true
     }
 
     state.loading = false
+  },
+  setDisplayName: (state, payload) => {
+    state.user = { ...state.user, displayName: payload }
   }
 
 }
