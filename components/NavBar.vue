@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <svg viewBox="0 0 1920 85" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <svg fill="none" preserveAspectRatio="none" viewBox="0 0 1920 85" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M49 82H-36V-72L2048 -59L2042 73.5H1568.5C1296.5 73.5 1050.5 60.5 818.5 60.5C553.5 60.5 222.5 82 49 82Z"
         fill="black"
@@ -9,36 +9,36 @@
         stroke-width="5"
       />
       <defs>
-        <linearGradient id="svg-grad" x1="-200%" y1="0%" x2="100%" y2="0%">
+        <linearGradient id="svg-grad" x1="-200%" x2="100%" y1="0%" y2="0%">
           <stop offset="0%" style="stop-color:rgb(0,100,200);stop-opacity:1" />
           <stop offset="33%" style="stop-color:rgb(0,220,250);stop-opacity:1" />
           <stop offset="66%" style="stop-color:rgb(0,100,200);stop-opacity:1" />
           <stop offset="100%" style="stop-color:rgb(0,220,250);stop-opacity:1" />
           <animate
-            attributeType="XML"
             attributeName="x1"
-            from="-200%"
-            to="-0%"
-            dur="5s"
+            attributeType="XML"
             begin="0s"
+            dur="5s"
+            from="-200%"
             repeatCount="indefinite"
+            to="-0%"
           />
           <animate
-            attributeType="XML"
             attributeName="x2"
-            from="100%"
-            to="300%"
-            dur="5s"
+            attributeType="XML"
             begin="0s"
+            dur="5s"
+            from="100%"
             repeatCount="indefinite"
+            to="300%"
           />
         </linearGradient>
       </defs>
     </svg>
 
-    <NuxtLink to="/" class="nav_logo w-24 mx-0 lg:w-96 lg:-mx-3 ">
-      <img src="~/assets/images/logotype-notes-white.svg" alt="Marchewczyk.notes" class="invisible lg:visible w-full">
-      <img src="~/assets/images/logo.svg" alt="Marchewczyk.notes" class="lg:invisible w-22 ml-3">
+    <NuxtLink class="nav_logo w-24 mx-0 lg:w-96 lg:-mx-3 " to="/">
+      <img alt="Marchewczyk.notes" class="invisible lg:visible w-full" src="~/assets/images/logotype-notes-white.svg">
+      <img alt="Marchewczyk.notes" class="lg:invisible w-22 ml-3" src="~/assets/images/logo.svg">
     </NuxtLink>
     <div v-if="logged">
       <NuxtLink to="/notes">
@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'NavBar',
@@ -81,7 +81,6 @@ export default {
     async logout () {
       await this.signOut()
       if (!this.logged) {
-        // await router.push('/login')
         await this.$router.push('/login')
       }
     }
@@ -89,11 +88,10 @@ export default {
 }
 </script>
 
-<style scoped lang='scss'>
+<style lang='scss' scoped>
 nav {
   display: block;
   position: absolute;
-  //box-shadow: 0 -22px 16px 20px rgba(0,0,0,0.4);
   width: 100vw;
   height: 3.5em;
   overflow-x: hidden;
@@ -128,7 +126,7 @@ nav {
 
   }
 
-  div{
+  div {
     float: right;
     margin-right: 0.4em;
     margin-top: 0.5em;

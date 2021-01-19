@@ -8,10 +8,10 @@
         <input
           id="email"
           v-model="email"
-          type="email"
-          required
-          placeholder=" "
           autocomplete="off"
+          placeholder=" "
+          required
+          type="email"
         >
         <label for="email">Email</label>
       </div>
@@ -20,10 +20,10 @@
         <input
           id="password"
           v-model="password"
-          type="password"
-          required
-          placeholder=" "
           autocomplete="off"
+          placeholder=" "
+          required
+          type="password"
         >
         <label for="password">Password</label>
       </div>
@@ -34,35 +34,35 @@
         <svg
           v-if="!loading"
           id="form_send_arrow_right"
-          width="32"
+          fill="none"
           height="24"
           viewBox="0 0 32 24"
-          fill="none"
+          width="32"
           xmlns="http://www.w3.org/2000/svg"
         >
           <line
+            stroke="white"
+            stroke-width="1.5"
             x1="-3.27835e-08"
-            y1="12.25"
             x2="30"
+            y1="12.25"
             y2="12.25"
-            stroke="white"
-            stroke-width="1.5"
           />
           <line
+            stroke="white"
+            stroke-width="1.5"
             x1="19.5303"
-            y1="1.46967"
             x2="30.5303"
+            y1="1.46967"
             y2="12.4697"
-            stroke="white"
-            stroke-width="1.5"
           />
           <line
-            y1="-0.75"
-            x2="15.5563"
-            y2="-0.75"
-            transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 19 22.5)"
             stroke="white"
             stroke-width="1.5"
+            transform="matrix(0.707107 -0.707107 -0.707107 -0.707107 19 22.5)"
+            x2="15.5563"
+            y1="-0.75"
+            y2="-0.75"
           />
         </svg>
       </button>
@@ -75,18 +75,15 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from 'vuex'
+import { mapActions, mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'Login',
+  middleware: ['route-guard-logged-out'],
   data: () => ({
     email: '',
     password: ''
   }),
-  head: () => ({
-    title: 'Login - Marchewczyk.notes'
-  }),
-  middleware: ['route-guard-logged-out'],
   computed: mapState('user', ['error', 'user', 'logged', 'loading']),
   beforeMount () {
     this.setError('')
@@ -97,11 +94,14 @@ export default {
     async submit () {
       await this.signIn({ email: this.email, password: this.password })
     }
-  }
+  },
+  head: () => ({
+    title: 'Login - Marchewczyk.notes'
+  })
 }
 </script>
 
-<style scoped lang='scss'>
+<style lang='scss' scoped>
 h2 {
   text-align: center;
   font-family: Quicksand, sans-serif;
@@ -110,6 +110,7 @@ h2 {
   margin-bottom: 1.4em;
   color: white;
 }
+
 form {
   display: block;
   position: relative;

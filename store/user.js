@@ -19,15 +19,15 @@ export const actions = {
         commit('setLoading', false)
       })
   },
-  async signOut ({ commit, rootActions, dispatch }) {
+  async signOut ({ commit }) {
     commit('setLoading', true)
     await this.$fire.auth.signOut()
       .then(() => {
         commit('setError', '')
         commit('setLoading', false)
       })
-      .catch((error) => {
-        console.log(error)
+      .catch((e) => {
+        console.log('Error', e)
       })
   },
   async signUp ({ commit }, payload) {
@@ -48,7 +48,6 @@ export const actions = {
       })
   },
   onAuthStateChangedAction ({ commit, dispatch }, { authUser }) {
-    console.log('actionUser', authUser)
     if (!authUser) {
       dispatch('notes/loadNotes', {}, { root: true })
     }
@@ -68,9 +67,7 @@ export const mutations = {
   setLoading: (state, payload) => {
     state.loading = payload
   },
-  ON_AUTH_STATE_CHANGED_MUTATION: (state, { authUser, claims }) => {
-    console.log('commitUser', authUser)
-
+  ON_AUTH_STATE_CHANGED_MUTATION: (state, { authUser }) => {
     if (!authUser) {
       state.user = null
       state.logged = false
@@ -85,7 +82,6 @@ export const mutations = {
       }
       state.logged = true
     }
-
     state.loading = false
   },
   setDisplayName: (state, payload) => {

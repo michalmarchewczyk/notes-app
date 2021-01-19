@@ -16,7 +16,7 @@ export const getters = {
 }
 
 export const actions = {
-  async loadNotes  ({ commit, rootState, state }) {
+  async loadNotes ({ commit, rootState, state }) {
     if (!rootState.user.logged) {
       commit('setNotesUID', null)
       commit('setNotes', [])
@@ -34,15 +34,23 @@ export const actions = {
       .limit(10)
       .get()
       .then(res => res.docs.map(doc => ({ ...doc.data(), id: doc.id, saved: true })))
-      .catch((e) => { console.log('Error', e) })
+      .catch((e) => {
+        console.log('Error', e)
+      })
     commit('setMoreAvailable', notes.length >= 10)
     commit('setNotes', notes)
     commit('setLoading', false)
   },
-  async loadMoreNotes  ({ commit, rootState, getters, state }) {
-    if (!rootState.user.logged) { return [] }
-    if (!getters.lastNote) { return [] }
-    if (!state.moreAvailable) { return [] }
+  async loadMoreNotes ({ commit, rootState, getters, state }) {
+    if (!rootState.user.logged) {
+      return []
+    }
+    if (!getters.lastNote) {
+      return []
+    }
+    if (!state.moreAvailable) {
+      return []
+    }
     commit('setLoading', true)
     const notes = await this.$fire.firestore.collection('notes')
       .where('uid', '==', rootState.user.user?.uid ?? '')
@@ -51,7 +59,9 @@ export const actions = {
       .startAfter(getters.lastNote.created)
       .get()
       .then(res => res.docs.map(doc => ({ ...doc.data(), id: doc.id, saved: true })))
-      .catch((e) => { console.log('Error', e) })
+      .catch((e) => {
+        console.log('Error', e)
+      })
     commit('setMoreAvailable', notes.length >= 10)
     commit('appendNotes', notes)
     commit('setLoading', false)
@@ -59,13 +69,15 @@ export const actions = {
   async addNote ({ commit, rootState }, payload) {
     const { name, value } = payload
     try {
-      if (!rootState.user.logged) { return }
+      if (!rootState.user.logged) {
+        return
+      }
       commit('setAdding', 1)
-      console.log(rootState.user.user?.uid)
       const newNote = { name, value, uid: rootState.user.user?.uid }
-      console.log(this.$fire)
-      const note = await this.$fire.firestore.collection('notes').add({ ...newNote, created: firebase.firestore.FieldValue.serverTimestamp() })
-      // const note = await this.$fire.firestore.collection('notes').add({ ...newNote, created: 0 })
+      const note = await this.$fire.firestore.collection('notes').add({
+        ...newNote,
+        created: firebase.firestore.FieldValue.serverTimestamp()
+      })
       commit('prependNotes', [{ ...newNote, id: note.id }])
       const createdNote = await this.$fire.firestore.collection('notes').doc(note.id).get().then(res => res.data())
       commit('refreshNote', { id: note.id, data: { created: createdNote.created, saved: true } })
@@ -77,12 +89,20 @@ export const actions = {
   },
   updateNote ({ commit, rootState }, payload) {
     const { id, name, value } = payload
-    if (!rootState.user.logged) { return }
+    if (!rootState.user.logged) {
+      return
+    }
     try {
-      if (!id) { return }
+      if (!id) {
+        return
+      }
       const data = {}
-      if (name) { data.name = name }
-      if (value) { data.value = value }
+      if (name) {
+        data.name = name
+      }
+      if (value) {
+        data.value = value
+      }
       data.saved = false
       commit('refreshNote', { id, data })
     } catch (e) {
@@ -91,9 +111,13 @@ export const actions = {
   },
   async saveNote ({ commit, getters, rootState }, payload) {
     const { id } = payload
-    if (!rootState.user.logged) { return }
+    if (!rootState.user.logged) {
+      return
+    }
     try {
-      if (!id) { return }
+      if (!id) {
+        return
+      }
       const note = getters.note(id)
       await this.$fire.firestore.collection('notes').doc(id).update({ name: note.name, value: note.value })
       commit('refreshNote', { id, data: { saved: true } })
@@ -103,9 +127,10 @@ export const actions = {
   },
   async deleteNote ({ commit, rootState }, payload) {
     const { id } = payload
-    if (!rootState.user.logged) { return }
+    if (!rootState.user.logged) {
+      return
+    }
     try {
-      console.log(id)
       await this.$fire.firestore.collection('notes').doc(id).delete()
       commit('deleteNote', { id })
       await this.$router.push('/notes/')
@@ -140,7 +165,6 @@ export const mutations = {
   refreshNote: (state, payload) => {
     Object.entries(payload.data).forEach(([key, value]) => {
       Vue.set(state.notes.find(note => note.id === payload.id), key, value)
-      // state.notes.find(note => note.id === payload.id)[key] = value
     })
   },
   deleteNote: (state, payload) => {

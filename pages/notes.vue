@@ -3,8 +3,10 @@
     <div class="t-0 l-0 w-full h-full p-4 flex pb-0 md:gap-4 max-w-screen-xl mx-auto">
       <div class="w-0 md:w-96 overflow-x-hidden flex-grow">
         <div ref="notesList" class="notes-list relative h-full  p-2 pt-0" @scroll="scroll">
-          <!--    <AddNote />-->
-          <button class="text-white text-center border-2 border-white p-4 py-2 w-full outline-none focus:outline-none font-bold sticky top-0 bg-black z-10" @click="noteAdd">
+          <button
+            class="text-white text-center border-2 border-white p-4 py-2 w-full outline-none focus:outline-none font-bold sticky top-0 bg-black z-10"
+            @click="noteAdd"
+          >
             Add Note
           </button>
           <transition-group name="list" tag="div">
@@ -20,21 +22,16 @@
 
 <script>
 import { mapActions, mapState } from 'vuex'
-// import AddNote from '@/components/AddNote'
 import Note from '@/components/Note'
 
 export default {
   name: 'Notes',
   components: { Note },
-  head: () => ({
-    title: 'Notes - Marchewczyk.notes'
-  }),
   middleware: ['route-guard-logged-in'],
   computed: {
     ...mapState('notes', ['notes', 'moreAvailable', 'loading'])
   },
   async beforeMount () {
-    console.log('LOADING')
     await this.loadNotes()
 
     const notesList = this.$refs.notesList
@@ -42,8 +39,6 @@ export default {
 
     while (!loaded) {
       await this.loadMoreNotes()
-      // console.log(notesList.scrollHeight)
-      // console.log(notesList.clientHeight)
       if (notesList.scrollHeight > notesList.clientHeight + 800) {
         loaded = true
       }
@@ -51,8 +46,6 @@ export default {
         loaded = true
       }
     }
-
-    console.log('DONE LOADING')
   },
   methods: {
     ...mapActions('notes', ['addNote', 'loadNotes', 'loadMoreNotes']),
@@ -63,18 +56,14 @@ export default {
       }
     },
     noteAdd () {
-      console.log('noteAdd')
       this.addNote({ name: 'New note', value: '' })
     },
     noteDel () {
-      console.log('noteDel')
       this.loadMore()
     },
     async loadMore () {
       const notesList = this.$refs.notesList
       let loaded = (notesList.scrollHeight > notesList.clientHeight + 800)
-
-      console.log('loaded:', loaded)
 
       while (!loaded) {
         await this.loadMoreNotes()
@@ -86,12 +75,14 @@ export default {
         }
       }
     }
-  }
-
+  },
+  head: () => ({
+    title: 'Notes - Marchewczyk.notes'
+  })
 }
 </script>
 
-<style scoped lang='scss'>
+<style lang='scss' scoped>
 
 .notes-list {
   overflow-x: hidden;

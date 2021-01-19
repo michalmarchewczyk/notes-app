@@ -20,18 +20,12 @@ export default {
     '@/assets/styles/scrollbar.scss'
   ],
 
-  // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [
-  ],
-
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
-    // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/pwa'
   ],
@@ -52,29 +46,20 @@ export default {
     },
     services: {
       auth: {
-        persistence: 'local', // default
+        persistence: 'local',
         initialize: {
           onAuthStateChangedMutation: 'user/ON_AUTH_STATE_CHANGED_MUTATION',
           onAuthStateChangedAction: 'user/onAuthStateChangedAction',
           subscribeManually: false
         },
-        ssr: true // default
-        // emulatorPort: 9099,
-        // emulatorHost: 'http://localhost',
-        // disableEmulatorWarnings: true
+        ssr: true
       },
       firestore: {
-        memoryOnly: false, // default
-        chunkName: process.env.NODE_ENV !== 'production' ? 'firebase-auth' : '[id]', // default
-        // enablePersistence: false
+        memoryOnly: false,
+        chunkName: process.env.NODE_ENV !== 'production' ? 'firebase-auth' : '[id]',
         enablePersistence: {
           synchronizeTabs: true
         }
-        // emulatorPort: 8080,
-        // emulatorHost: 'localhost'
-        // settings: {
-        //   // Firestore Settings - currently only works in SPA mode
-        // }
       }
     }
   },
@@ -90,13 +75,10 @@ export default {
     },
     workbox: {
       enabled: true,
-      // offlineStrategy: 'NetworkFirst',
       offlineStrategy: 'CacheFirst',
-      // offlineStrategy: 'StaleWhileRevalidate',
       importScripts: [
         '/firebase-auth-sw.js'
       ]
-      // dev: process.env.NODE_ENV === 'development'
     }
   },
 
