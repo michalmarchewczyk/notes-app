@@ -16,6 +16,11 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "nuxt": "^3.3.2",
-    "prettier": "^2.8.7"
+    "prettier": "^2.8.7",
+    "sass": "^1.60.0"
+  },
+  "dependencies": {
+    "primeicons": "^6.0.1",
+    "primevue": "^3.26.1"
   }
 }

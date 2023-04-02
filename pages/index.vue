@@ -1,7 +1,9 @@
-<template>
-  <h1>Index</h1>
-</template>
-
 <script setup></script>
 
-<style scoped></style>
+<template>
+  <div>
+    <h1>Index</h1>
+  </div>
+</template>
+
+<style scoped lang="scss"></style>
