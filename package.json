@@ -1,38 +1,14 @@
 {
-  "name": "marchewczyk-notes",
-  "version": "1.0.0",
+  "name": "notes-app",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "emulators": "firebase emulators:start",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "lint": "npm run lint:js"
-  },
-  "dependencies": {
-    "@nuxtjs/firebase": "^7.3.1",
-    "core-js": "^3.6.5",
-    "firebase": "^8.2.2",
-    "moment": "^2.29.1",
-    "nuxt": "^2.14.6"
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/types": "^2.14.12",
-    "@nuxtjs/eslint-config": "^3.1.0",
-    "@nuxtjs/eslint-module": "^2.0.0",
-    "@nuxtjs/pwa": "^3.3.4",
-    "@nuxtjs/tailwindcss": "^3.4.2",
-    "autoprefixer": "^9.8.6",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.10.0",
-    "eslint-plugin-nuxt": "^1.0.0",
-    "postcss": "^7.0.35",
-    "sass": "^1.32.4",
-    "sass-loader": "^10.1.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "vue": "^2.6.12",
-    "vuex": "^3.6.0"
+    "nuxt": "^3.3.2"
   }
 }
