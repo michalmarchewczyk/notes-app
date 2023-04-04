@@ -9,3 +9,4 @@ dist
 .DS_Store
 
 .idea
+firebase-service-account-file.json
