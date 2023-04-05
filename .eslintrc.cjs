@@ -10,5 +10,8 @@ module.exports = {
     },
     extends: ['@nuxtjs/eslint-config-typescript', 'plugin:prettier/recommended'],
     plugins: [],
-    rules: {},
+    rules: {
+        'max-len': ['error', { 'code': 120 }],
+        'prettier/prettier': ['error', { 'printWidth': 120 }],
+    },
 }

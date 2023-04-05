@@ -24,6 +24,7 @@
     "firebase": "^9.19.1",
     "firebase-admin": "^11.5.0",
     "nuxt-vuefire": "^0.1.6",
+    "primeflex": "^3.3.0",
     "primeicons": "^6.0.1",
     "primevue": "^3.26.1",
     "vuefire": "^3.1.0"
