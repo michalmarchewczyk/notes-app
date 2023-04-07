@@ -9,15 +9,30 @@ async function logout() {
   navigateTo("/login");
 }
 
+const menuHidden = ref(true);
+
 const items = ref<MenuItem[]>([
+  {
+    label: "Home",
+    icon: "ti ti-home",
+    command: () => {
+      navigateTo("/app");
+      menuHidden.value = true;
+    },
+  },
+  {
+    label: "Settings",
+    icon: "ti ti-settings",
+    command: () => {
+      navigateTo("/app/settings");
+      menuHidden.value = true;
+    },
+  },
   { separator: true },
-  { label: "Home", icon: "pi pi-home", command: () => navigateTo("/app") },
-  { label: "Settings", icon: "pi pi-cog", command: () => navigateTo("/app/settings") },
+  { label: "Logout", icon: "ti ti-logout", command: logout },
   { separator: true },
-  { label: "Logout", icon: "pi pi-sign-out", command: logout },
 ]);
 
-const menuHidden = ref(true);
 const user = useCurrentUser();
 
 const avatarLabel = computed(() => generateUserLabel(user.value));
@@ -28,7 +43,7 @@ const avatarTextColor = computed(() => createColorFromString(user.value?.email |
 <template>
   <div class="menu-container" :class="{ 'menu-hidden': menuHidden }">
     <Menu :model="items" class="w-full">
-      <template #start>
+      <template #end>
         <button
           class="w-full p-link flex align-items-center p-2 pl-3 text-color border-noround"
           @click="menuHidden = !menuHidden"
@@ -46,7 +61,7 @@ const avatarTextColor = computed(() => createColorFromString(user.value?.email |
               {{ user?.displayName || user?.email }}
             </span>
           </div>
-          <div class="pi pi-chevron-up text-lg px-3 button-chevron" style=""></div>
+          <div class="ti ti-chevron-down text-lg button-chevron" style=""></div>
         </button>
       </template>
     </Menu>
@@ -57,18 +72,30 @@ const avatarTextColor = computed(() => createColorFromString(user.value?.email |
 .menu-container {
   overflow: hidden;
   transition: height 0.2s ease;
-  height: 195px;
-  border-bottom: 1px solid var(--bluegray-100);
+  height: 204px;
+  border-top: 2px solid var(--bluegray-100);
   :deep(.p-menu) {
     border: none;
     border-radius: 0;
   }
+  :deep(.p-menu-list) {
+    margin-top: 0;
+    transition: margin-top 0.2s ease;
+  }
   .button-chevron {
     transition: transform 0.2s ease;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    &::before {
+      font-size: 1.4rem;
+    }
   }
 }
 .menu-hidden {
-  height: 56px;
+  height: 54px;
+  :deep(.p-menu-list) {
+    margin-top: -150px;
+  }
   .button-chevron {
     transform: rotate(180deg);
   }

@@ -36,7 +36,8 @@ function loginEmail() {
       loadingEmail.value = false;
       navigateTo(route.query.redirect?.toString() || "/app");
     })
-    .catch((err) => {
+    .catch(async (err) => {
+      await new Promise((resolve) => setTimeout(resolve, 5000));
       loadingEmail.value = false;
       if (err.code === "auth/invalid-email") {
         error.value = "Invalid email address";
@@ -81,24 +82,35 @@ function login(provider: AuthProvider) {
             <label for="password">Password</label>
             <Password id="password" v-model="password" :feedback="false" toggle-mask required @input="error = ''" />
           </div>
-          <InlineMessage v-if="error" severity="error">{{ error }}</InlineMessage>
-          <Button icon="pi pi-sign-in" label="Login" type="submit" :loading="loadingEmail" />
+          <InlineMessage v-if="error" severity="error">
+            <span class="p-inline-message-icon ti ti-alert-circle text-xl vertical-align-middle" />
+            {{ error }}
+          </InlineMessage>
+          <Button
+            icon="ti ti-login"
+            loading-icon="ti ti-spin ti-loader-2"
+            label="Login"
+            type="submit"
+            :loading="loadingEmail"
+          />
         </form>
         <NuxtLink to="/signup">
-          <Button icon="pi pi-user-plus" label="Create Account" outlined class="w-full" />
+          <Button icon="ti ti-user-plus" label="Create Account" outlined class="w-full" />
         </NuxtLink>
         <Divider align="center" class="my-2"> or </Divider>
         <Button
-          icon="pi pi-google"
+          icon="ti ti-brand-google"
           :loading="loading[googleAuthProvider.providerId]"
+          loading-icon="ti ti-spin ti-loader-2"
           label="Login with Google"
           severity="info"
           class="bg-blue-500"
           @click="login(googleAuthProvider)"
         />
         <Button
-          icon="pi pi-github"
+          icon="ti ti-brand-github"
           :loading="loading[githubAuthProvider.providerId]"
+          loading-icon="ti ti-spin ti-loader-2"
           label="Login with GitHub"
           severity="secondary"
           class="surface-800"

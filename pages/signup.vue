@@ -83,24 +83,35 @@ function login(provider: AuthProvider) {
             <label for="password">Password</label>
             <Password id="password" v-model="password" :feedback="false" toggle-mask required @input="error = ''" />
           </div>
-          <InlineMessage v-if="error" severity="error">{{ error }}</InlineMessage>
-          <Button icon="pi pi-user-plus" label="Sign up" type="submit" :loading="loadingEmail" />
+          <InlineMessage v-if="error" severity="error">
+            <span class="p-inline-message-icon ti ti-alert-circle text-xl vertical-align-middle" />
+            {{ error }}
+          </InlineMessage>
+          <Button
+            icon="ti ti-user-plus"
+            loading-icon="ti ti-spin ti-loader-2"
+            label="Sign up"
+            type="submit"
+            :loading="loadingEmail"
+          />
         </form>
         <NuxtLink to="/login">
-          <Button icon="pi pi-sign-in" label="Login" outlined class="w-full" />
+          <Button icon="ti ti-login" label="Login" outlined class="w-full" />
         </NuxtLink>
         <Divider align="center" class="my-2"> or </Divider>
         <Button
-          icon="pi pi-google"
+          icon="ti ti-brand-google"
           :loading="loading[googleAuthProvider.providerId]"
+          loading-icon="ti ti-spin ti-loader-2"
           label="Sign up with Google"
           severity="info"
           class="bg-blue-500"
           @click="login(googleAuthProvider)"
         />
         <Button
-          icon="pi pi-github"
+          icon="ti ti-brand-github"
           :loading="loading[githubAuthProvider.providerId]"
+          loading-icon="ti ti-spin ti-loader-2"
           label="Sign up with GitHub"
           severity="secondary"
           class="surface-800"

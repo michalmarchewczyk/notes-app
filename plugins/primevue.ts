@@ -10,9 +10,13 @@ import Splitter from "primevue/splitter";
 import SplitterPanel from "primevue/splitterpanel";
 import Avatar from "primevue/avatar";
 import Menu from "primevue/menu";
+import Tree from "primevue/tree";
+import ScrollPanel from "primevue/scrollpanel";
+import Tooltip from "primevue/tooltip";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
+  nuxtApp.vueApp.directive("tooltip", Tooltip);
   nuxtApp.vueApp.component("Button", Button);
   nuxtApp.vueApp.component("InputText", InputText);
   nuxtApp.vueApp.component("Password", Password);
@@ -23,4 +27,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("SplitterPanel", SplitterPanel);
   nuxtApp.vueApp.component("Menu", Menu);
   nuxtApp.vueApp.component("Avatar", Avatar);
+  nuxtApp.vueApp.component("Tree", Tree);
+  nuxtApp.vueApp.component("ScrollPanel", ScrollPanel);
 });

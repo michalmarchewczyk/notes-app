@@ -3,14 +3,14 @@ export default defineNuxtConfig({
   css: [
     "primevue/resources/themes/lara-light-blue/theme.css",
     "primevue/resources/primevue.css",
-    "primeicons/primeicons.css",
+    "@/node_modules/@tabler/icons-webfont/tabler-icons.min.css",
     "primeflex/primeflex.css",
     "@/assets/main.scss",
   ],
   build: {
     transpile: ["primevue"],
   },
-  modules: ["nuxt-vuefire"],
+  modules: ["nuxt-vuefire", "@vueuse/nuxt"],
   vuefire: {
     config: {
       apiKey: process.env.FIREBASE_API_KEY,

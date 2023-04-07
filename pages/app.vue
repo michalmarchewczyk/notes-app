@@ -9,6 +9,9 @@ definePageMeta({
   <div class="h-full">
     <Splitter>
       <SplitterPanel :min-size="10" :size="15" class="menu">
+        <ClientOnly>
+          <NotesTree />
+        </ClientOnly>
         <UserMenu />
       </SplitterPanel>
       <SplitterPanel :min-size="70" :size="85" class="page">
@@ -20,7 +23,9 @@ definePageMeta({
 
 <style scoped lang="scss">
 .menu {
-  min-width: 180px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
 }
 .page {
   box-shadow: inset 40px 0 20px -40px rgba(0, 0, 0, 0.1);
@@ -34,7 +39,7 @@ definePageMeta({
     overflow: hidden;
   }
   :deep(.p-splitter-gutter) {
-    width: 1.5px;
+    width: 2px;
     background-color: var(--bluegray-200);
     &.p-splitter-gutter-resizing {
       background-color: var(--bluegray-300);
@@ -42,7 +47,7 @@ definePageMeta({
     z-index: 1000;
     .p-splitter-gutter-handle {
       background-color: var(--bluegray-300);
-      width: 3px !important;
+      width: 4px !important;
       flex-shrink: 0;
       height: 40px;
       border-radius: 2px;

@@ -1,0 +1,33 @@
+{
+  "indexes": [
+  {
+    "collectionGroup": "folders",
+    "queryScope": "COLLECTION",
+    "fields": [
+      {
+        "fieldPath": "owner",
+        "order": "ASCENDING"
+      },
+      {
+        "fieldPath": "created",
+        "order": "ASCENDING"
+      }
+      ]
+  },
+  {
+    "collectionGroup": "notes",
+    "queryScope": "COLLECTION",
+    "fields": [
+      {
+        "fieldPath": "owner",
+        "order": "ASCENDING"
+      },
+      {
+        "fieldPath": "created",
+        "order": "ASCENDING"
+      }
+      ]
+  }
+  ],
+  "fieldOverrides": []
+}
