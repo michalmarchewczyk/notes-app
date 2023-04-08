@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { addDoc, collection, doc, query, serverTimestamp, where, orderBy } from "firebase/firestore";
 import { TreeNode } from "primevue/tree";
+import { vOnClickOutside } from "@vueuse/components";
 import NoteData from "~/utils/NoteData";
 import FolderData from "~/utils/FolderData";
 import NotesTreeNode from "~/components/NotesTreeNode.vue";
@@ -52,6 +53,13 @@ const tree = computed(() => {
 const selectedKey = ref<Record<string, boolean> | null>(null);
 const expandedKeys = ref<Record<string, boolean>>({});
 
+const nodeRefs = ref<Record<string, HTMLDivElement>>({});
+function handleRef(el: HTMLDivElement, key: string) {
+  if (el) {
+    nodeRefs.value[key] = el;
+  }
+}
+
 async function addNote() {
   let parent = Object.keys(selectedKey.value ?? {})[0] ?? null;
   if (parent && !!noteNodes.value.find((note) => note.key === parent)) {
@@ -67,8 +75,8 @@ async function addNote() {
   if (parent && expandedKeys.value) {
     expandedKeys.value[parent] = true;
   }
+  nodeRefs.value[doc.id]?.scrollIntoView();
 }
-
 async function addFolder() {
   let parent = Object.keys(selectedKey.value ?? {})[0] ?? null;
   if (parent && !!noteNodes.value.find((note) => note.key === parent)) {
@@ -84,13 +92,18 @@ async function addFolder() {
   if (parent && expandedKeys.value) {
     expandedKeys.value[parent] = true;
   }
+  nodeRefs.value[doc.id]?.scrollIntoView();
+}
+
+function unselect() {
+  selectedKey.value = {};
 }
 
 const search = ref("");
 </script>
 
 <template>
-  <div class="tree-container">
+  <div v-on-click-outside="unselect" class="tree-container">
     <div class="buttons-container">
       <span class="p-input-icon-left flex-1">
         <i class="ti ti-search" />
@@ -108,7 +121,9 @@ const search = ref("");
           selection-mode="single"
         >
           <template #default="slotProps">
-            <NotesTreeNode :node="slotProps.node" />
+            <div :ref="(el) => handleRef(el, slotProps.node.key)">
+              <NotesTreeNode :node="slotProps.node" />
+            </div>
           </template>
         </Tree>
       </ScrollPanel>
