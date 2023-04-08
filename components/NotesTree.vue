@@ -24,7 +24,7 @@ function getNode(data: NoteData | FolderData) {
     icon: "ti " + ("parent" in data ? "ti-folder" : "ti-file"),
     collapsedIcon: "ti ti-chevron-right",
     expandedIcon: "ti ti-chevron-down",
-    type: "note",
+    type: "parent" in data ? "folder" : "note",
     parent: "parent" in data ? data.parent : data.folder,
     note: data,
     ref: doc("parent" in data ? foldersRef : notesRef, data.id),
@@ -113,6 +113,10 @@ const search = ref("");
       <Button icon="ti ti-file-plus" text @click="addNote()" />
     </div>
     <div class="scroll-container">
+      <div v-if="tree.length === 0" class="no-notes">
+        <i class="ti ti-files"></i>
+        <span>No notes found</span>
+      </div>
       <ScrollPanel>
         <Tree
           v-model:selection-keys="selectedKey"
@@ -173,6 +177,23 @@ const search = ref("");
     width: 8px;
   }
 }
+.no-notes {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  i {
+    font-size: 6rem;
+    color: var(--bluegray-100);
+  }
+  span {
+    font-size: 1.8rem;
+    font-weight: 400;
+    margin-top: 1rem;
+    color: var(--bluegray-200);
+  }
+}
 .p-tree {
   border: none;
   padding: 0.3rem;
@@ -185,7 +206,6 @@ const search = ref("");
     padding-bottom: 0.3rem !important;
   }
   :deep(.p-treenode-label) {
-    align-self: stretch;
     flex: 1;
     overflow: hidden;
   }
