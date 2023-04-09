@@ -11,8 +11,8 @@ const db = useFirestore();
 const foldersRef = collection(db, "folders");
 const notesRef = collection(db, "notes");
 
-const folders = useFolders();
-const notes = useNotes();
+const folders = useSharedFolders();
+const notes = useSharedNotes();
 
 function getNode(data: NoteData | FolderData) {
   return {

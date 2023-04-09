@@ -1,7 +1,7 @@
 import { collection, orderBy, query, where } from "firebase/firestore";
 import NoteData from "~/utils/NoteData";
 
-export const useNotes = () => {
+const useNotes = () => {
   const user = useCurrentUser();
   const db = useFirestore();
   const notesRef = collection(db, "notes");
@@ -10,3 +10,5 @@ export const useNotes = () => {
 
   return useCollection<NoteData>(notesQuery);
 };
+
+export const useSharedNotes = createSharedComposable(useNotes);

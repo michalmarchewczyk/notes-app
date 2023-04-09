@@ -1,7 +1,7 @@
 import { collection, orderBy, query, where } from "firebase/firestore";
 import FolderData from "~/utils/FolderData";
 
-export const useFolders = () => {
+const useFolders = () => {
   const user = useCurrentUser();
   const db = useFirestore();
   const foldersRef = collection(db, "folders");
@@ -10,3 +10,5 @@ export const useFolders = () => {
 
   return useCollection<FolderData>(foldersQuery);
 };
+
+export const useSharedFolders = createSharedComposable(useFolders);
