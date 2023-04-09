@@ -2,12 +2,11 @@
 import { TabViewChangeEvent } from "primevue/tabview";
 
 const route = useRoute();
-
 const notes = useSharedNotes();
+const userData = useUserData();
 
-const noteTabs = ref<{ key: string }[]>([]);
-const activeTab = ref(0);
-const lastOpened = ref<string[]>([]);
+const activeTab = ref(-1);
+const loading = ref(false);
 
 const noteTitles = computed(() => {
   return notes.value.reduce((acc, note) => {
@@ -16,35 +15,49 @@ const noteTitles = computed(() => {
   }, {} as Record<string, string>);
 });
 
+const noteTabs = computed(() => {
+  return userData.data.value?.noteTabs ?? [];
+});
+const lastOpened = computed(() => {
+  return userData.data.value?.lastOpened ?? [];
+});
+
 watch(
-  route,
+  [() => route.params.noteKey, () => noteTabs.value.join(","), loading, () => userData.data.value === undefined],
   () => {
-    if (route.params.noteKey) {
-      if (!noteTabs.value.find((note) => note.key === route.params.noteKey)) {
-        noteTabs.value.push({ key: route.params.noteKey.toString() });
+    if (route.params.noteKey && userData.data.value && !loading.value) {
+      if (!noteTabs.value.find((note) => note === route.params.noteKey)) {
+        const newNoteTabs = [...noteTabs.value, route.params.noteKey.toString()];
+        userData.update({ noteTabs: newNoteTabs });
       }
-      activeTab.value = noteTabs.value.findIndex((note) => note.key === route.params.noteKey);
-      lastOpened.value = lastOpened.value.filter((key) => key !== route.params.noteKey);
-      lastOpened.value.push(route.params.noteKey.toString());
+      activeTab.value = noteTabs.value.findIndex((note) => note === route.params.noteKey);
+      const newLastOpened = lastOpened.value.filter(
+        (key) => key !== route.params.noteKey && noteTabs.value.includes(key)
+      );
+      newLastOpened.push(route.params.noteKey.toString());
+      userData.update({ lastOpened: newLastOpened });
     }
   },
   { immediate: true }
 );
 
-function closeTab(key: string) {
-  noteTabs.value = noteTabs.value.filter((note) => note.key !== key);
-  lastOpened.value = lastOpened.value.filter((note) => note !== key);
-  if (lastOpened.value.length === 0) {
+async function closeTab(key: string) {
+  loading.value = true;
+  const newNoteTabs = noteTabs.value.filter((note) => note !== key);
+  const newLastOpened = lastOpened.value.filter((note) => note !== key);
+  if (newLastOpened.length === 0) {
     navigateTo("/app/notes");
   } else {
-    navigateTo(`/app/notes/${lastOpened.value[lastOpened.value.length - 1]}`);
+    navigateTo(`/app/notes/${newLastOpened[newLastOpened.length - 1]}`);
   }
-  activeTab.value = noteTabs.value.findIndex((note) => note.key === route.params.noteKey);
+  activeTab.value = newNoteTabs.findIndex((note) => note === route.params.noteKey);
+  await userData.update({ noteTabs: newNoteTabs, lastOpened: newLastOpened });
+  loading.value = false;
 }
 
 function tabChange(event: TabViewChangeEvent) {
-  if (route.params.noteKey !== noteTabs.value[event.index].key) {
-    navigateTo(`/app/notes/${noteTabs.value[event.index].key}`);
+  if (route.params.noteKey !== userData.data.value?.noteTabs?.[event.index]) {
+    navigateTo(`/app/notes/${userData.data.value?.noteTabs?.[event.index]}`);
   }
 }
 </script>
@@ -52,11 +65,11 @@ function tabChange(event: TabViewChangeEvent) {
 <template>
   <div>
     <TabView v-if="noteTabs.length > 0" v-model:active-index="activeTab" @tab-change="tabChange">
-      <TabPanel v-for="note in noteTabs" :key="note.key">
+      <TabPanel v-for="note in noteTabs" :key="note">
         <template #header>
-          <div class="tab" @click.middle.prevent.stop="closeTab(note.key)">
-            <span>{{ noteTitles[note.key] ?? "-" }}</span>
-            <Button icon="ti ti-x" severity="secondary" text rounded @click.prevent.stop="closeTab(note.key)" />
+          <div class="tab" @click.middle.prevent.stop="closeTab(note)">
+            <span>{{ noteTitles[note] ?? "-" }}</span>
+            <Button icon="ti ti-x" severity="secondary" text rounded @click.prevent.stop="closeTab(note)" />
           </div>
         </template>
       </TabPanel>
@@ -81,6 +94,7 @@ function tabChange(event: TabViewChangeEvent) {
   overflow: hidden;
   display: block;
   border-radius: 8px;
+  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.08);
   .p-tabview-header-action {
     background: transparent !important;
     padding: 0.2rem !important;

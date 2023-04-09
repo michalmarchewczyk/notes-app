@@ -17,6 +17,7 @@ export default defineNuxtConfig({
       authDomain: process.env.FIREBASE_AUTH_DOMAIN,
       projectId: process.env.FIREBASE_PROJECT_ID,
       appId: process.env.FIREBASE_APP_ID,
+      databaseURL: process.env.FIREBASE_DATABASE_URL,
     },
     admin: {
       serviceAccount: "firebase-service-account-file.json",
