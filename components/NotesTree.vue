@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { addDoc, collection, doc, query, serverTimestamp, where, orderBy } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
 import { TreeNode } from "primevue/tree";
 import { vOnClickOutside } from "@vueuse/components";
 import NoteData from "~/utils/NoteData";
@@ -11,11 +11,8 @@ const db = useFirestore();
 const foldersRef = collection(db, "folders");
 const notesRef = collection(db, "notes");
 
-const foldersQuery = query(foldersRef, where("owner", "==", user.value!.uid), orderBy("created", "asc"));
-const notesQuery = query(notesRef, where("owner", "==", user.value!.uid), orderBy("created", "asc"));
-
-const folders = useCollection<FolderData>(foldersQuery);
-const notes = useCollection<NoteData>(notesQuery);
+const folders = useFolders();
+const notes = useNotes();
 
 function getNode(data: NoteData | FolderData) {
   return {
@@ -75,7 +72,8 @@ async function addNote() {
   if (parent && expandedKeys.value) {
     expandedKeys.value[parent] = true;
   }
-  nodeRefs.value[doc.id]?.scrollIntoView();
+  nodeRefs.value[doc.id]?.scrollIntoView({ block: "end" });
+  openNode({ key: doc.id, type: "note" });
 }
 async function addFolder() {
   let parent = Object.keys(selectedKey.value ?? {})[0] ?? null;
@@ -92,11 +90,17 @@ async function addFolder() {
   if (parent && expandedKeys.value) {
     expandedKeys.value[parent] = true;
   }
-  nodeRefs.value[doc.id]?.scrollIntoView();
+  nodeRefs.value[doc.id]?.scrollIntoView({ block: "end" });
 }
 
 function unselect() {
   selectedKey.value = {};
+}
+
+function openNode(node: TreeNode) {
+  if (node.type === "note") {
+    navigateTo(`/app/notes/${node.key}`);
+  }
 }
 
 const search = ref("");
@@ -123,6 +127,7 @@ const search = ref("");
           v-model:expanded-keys="expandedKeys"
           :value="tree"
           selection-mode="single"
+          @node-select="openNode"
         >
           <template #default="slotProps">
             <div :ref="(el) => handleRef(el, slotProps.node.key)">
@@ -146,7 +151,7 @@ const search = ref("");
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding: 0.3rem 0.5rem;
+  padding: 0.5rem 0.5rem;
   gap: 0.3rem;
   span {
     i {

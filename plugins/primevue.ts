@@ -13,6 +13,8 @@ import Menu from "primevue/menu";
 import Tree from "primevue/tree";
 import ScrollPanel from "primevue/scrollpanel";
 import Tooltip from "primevue/tooltip";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -29,4 +31,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Avatar", Avatar);
   nuxtApp.vueApp.component("Tree", Tree);
   nuxtApp.vueApp.component("ScrollPanel", ScrollPanel);
+  nuxtApp.vueApp.component("TabView", TabView);
+  nuxtApp.vueApp.component("TabPanel", TabPanel);
 });
