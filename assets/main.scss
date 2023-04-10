@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
- *:not(.pi) {
+ *:not(.ti) {
   font-family: 'Inter', sans-serif;
 }
 
@@ -47,6 +47,10 @@ label{
   font-weight: 600;
 }
 
+:root {
+  --text-color: #212121;
+}
+
 .p-inputtext, .p-password {
   color: var(--gray-900);
 }
@@ -54,7 +58,7 @@ label{
 .p-card {
   color: var(--gray-900);
   .p-card-content {
-    padding-bottom: 0;
-    padding-top: 0.5rem;
+    padding-bottom: 0 !important;
+    padding-top: 0.5rem !important;
   }
 }

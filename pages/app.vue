@@ -41,7 +41,16 @@ definePageMeta({
     z-index: 1;
     pointer-events: none;
   }
-  background-color: hsl(200, 40%, 97%);
+  background-color: var(--surface-b);
+}
+:global(*[data-theme="dark"] .p-splitter-gutter) {
+  background-color: var(--blue-900) !important;
+}
+:global(*[data-theme="dark"] .p-splitter-gutter-resizing) {
+  background-color: var(--blue-800) !important;
+}
+:global(*[data-theme="dark"] .p-splitter-gutter-handle) {
+  background-color: var(--blue-800) !important;
 }
 .p-splitter {
   height: 100%;

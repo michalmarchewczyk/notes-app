@@ -1,17 +1,21 @@
-import { ref as dbRef, set, update } from "firebase/database";
+import { ref as dbRef, set, update, serverTimestamp } from "firebase/database";
+
+interface UserData {
+  noteTabs: string[];
+  lastOpened: string[];
+  theme: "light" | "dark";
+}
 
 export const useUserData = () => {
   const db = useDatabase();
 
   const user = useCurrentUser();
 
-  if (!user.value) {
+  if (!user.value || process.server) {
     return { data: ref(null), set: () => false, update: () => false };
   }
 
-  const userData = useDatabaseObject<{ noteTabs: string[]; lastOpened: string[] }>(
-    dbRef(db, "users/" + user.value.uid)
-  );
+  const userData = useDatabaseObject<UserData>(dbRef(db, "users/" + user.value.uid));
 
   const setUserData = async (data: Record<string, any>) => {
     if (!user.value) {
@@ -29,9 +33,7 @@ export const useUserData = () => {
     return true;
   };
 
-  if (!userData.value) {
-    setUserData({ theme: "light" });
-  }
+  updateUserData({ lastLogin: serverTimestamp() });
 
   return { data: userData, set: setUserData, update: updateUserData };
 };

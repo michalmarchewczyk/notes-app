@@ -94,7 +94,7 @@ function tabChange(event: TabViewChangeEvent) {
   overflow: hidden;
   display: block;
   border-radius: 8px;
-  box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 2px -0.8px var(--surface-900);
   .p-tabview-header-action {
     background: transparent !important;
     padding: 0.2rem !important;
@@ -107,7 +107,7 @@ function tabChange(event: TabViewChangeEvent) {
   &.p-highlight {
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1);
     .p-tabview-header-action {
-      background: #ffffff !important;
+      background: var(--surface-f) !important;
     }
   }
 }
@@ -128,7 +128,7 @@ function tabChange(event: TabViewChangeEvent) {
   button {
     height: 1.3rem !important;
     width: 1.3rem !important;
-    padding: 0.2rem 0;
+    padding: 0.2rem 0 !important;
   }
 }
 </style>

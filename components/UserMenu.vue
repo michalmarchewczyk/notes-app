@@ -69,6 +69,9 @@ const avatarTextColor = computed(() => createColorFromString(user.value?.email |
 </template>
 
 <style scoped lang="scss">
+:global(*[data-theme="dark"] .menu-container) {
+  border-top: 2px solid var(--blue-900) !important;
+}
 .menu-container {
   overflow: hidden;
   transition: height 0.2s ease;

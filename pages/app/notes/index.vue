@@ -1,15 +1,17 @@
 <script setup lang="ts">
-const userData = useUserData();
+onMounted(() => {
+  const userData = useUserData();
 
-watch(
-  () => userData.data.value,
-  () => {
-    if (userData.data.value?.lastOpened && userData.data.value?.lastOpened.length > 0) {
-      navigateTo("/app/notes/" + userData.data.value?.lastOpened[userData.data.value?.lastOpened.length - 1]);
-    }
-  },
-  { immediate: true }
-);
+  watch(
+    () => userData.data.value,
+    () => {
+      if (userData.data.value?.lastOpened && userData.data.value?.lastOpened.length > 0) {
+        navigateTo("/app/notes/" + userData.data.value?.lastOpened[userData.data.value?.lastOpened.length - 1]);
+      }
+    },
+    { immediate: true }
+  );
+});
 </script>
 
 <template>

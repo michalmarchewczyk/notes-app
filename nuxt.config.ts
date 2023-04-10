@@ -6,6 +6,7 @@ export default defineNuxtConfig({
     "@/node_modules/@tabler/icons-webfont/tabler-icons.min.css",
     "primeflex/primeflex.css",
     "@/assets/main.scss",
+    "@/assets/dark-theme.scss",
   ],
   build: {
     transpile: ["primevue"],
