@@ -19,6 +19,7 @@ export default defineNuxtConfig({
       projectId: process.env.FIREBASE_PROJECT_ID,
       appId: process.env.FIREBASE_APP_ID,
       databaseURL: process.env.FIREBASE_DATABASE_URL,
+      storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
     },
     admin: {
       serviceAccount: "firebase-service-account-file.json",
