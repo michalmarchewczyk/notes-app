@@ -17,20 +17,28 @@ function loadEditor(editor: { instance: Quill }) {
   editorInstance = editor.instance;
 }
 
+const lastUpdates = ref<string[]>([]);
+
 watchDebounced(
   contentValue,
   () => {
     if (contentValue.value && noteData.data.value?.content !== contentValue.value) {
+      lastUpdates.value.push(contentValue.value);
+      lastUpdates.value = lastUpdates.value.slice(-10);
       noteData.update({ content: contentValue.value });
     }
   },
-  { debounce: 500, maxWait: 1000 }
+  { debounce: 200, maxWait: 500 }
 );
 
 watch(
   noteData.data,
   async () => {
-    if (noteData.data.value && noteData.data.value?.content !== contentValue.value) {
+    if (
+      noteData.data.value &&
+      noteData.data.value?.content !== contentValue.value &&
+      !lastUpdates.value.includes(noteData.data.value?.content)
+    ) {
       let focused = false;
       if (editorInstance?.hasFocus()) {
         focused = true;
