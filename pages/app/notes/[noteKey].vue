@@ -15,5 +15,6 @@ const route = useRoute();
 <style scoped lang="scss">
 .container {
   flex: 1;
+  overflow: hidden;
 }
 </style>

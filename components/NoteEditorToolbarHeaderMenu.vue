@@ -49,7 +49,7 @@ const disableHeaderMenu = [
     :class="`ti ti-${selectedHeader ? 'h-' + selectedHeader : 'heading-off'} ${selectedHeader ? 'ql-active' : ''}`"
     @click="toggleHeaderMenu"
   />
-  <div v-on-click-outside="disableHeaderMenu" class="menu-container">
+  <div v-on-click-outside="disableHeaderMenu" class="header-menu-container">
     <Menu
       class="shadow-5"
       :model="[1, 2, 3, 4, 5, 6].map((value) => ({ value }))"
@@ -69,7 +69,7 @@ const disableHeaderMenu = [
 </template>
 
 <style scoped lang="scss">
-.menu-container {
+.header-menu-container {
   position: relative;
   z-index: 100;
   margin-bottom: -4px;
@@ -88,7 +88,7 @@ const disableHeaderMenu = [
 }
 
 button {
-  font-size: 24px;
+  font-size: 24px !important;
   width: 36px !important;
   height: 36px !important;
   padding-left: 6px !important;

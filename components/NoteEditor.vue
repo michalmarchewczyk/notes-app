@@ -73,30 +73,46 @@ const enabledFormats = [
 </script>
 
 <template>
-  <div class="editorContainer">
-    <Editor v-model="contentValue" :formats="enabledFormats" @load="loadEditor">
-      <template #toolbar>
-        <NoteEditorToolbar />
-      </template>
-    </Editor>
+  <div class="editor-container">
+    <ScrollPanel>
+      <Editor v-model="contentValue" :formats="enabledFormats" @load="loadEditor">
+        <template #toolbar>
+          <NoteEditorToolbar />
+        </template>
+      </Editor>
+    </ScrollPanel>
   </div>
 </template>
 
 <style scoped lang="scss">
-.editorContainer {
+.editor-container {
   height: 100%;
+  max-height: 100%;
   overflow: hidden;
+  width: calc(100% - 92px);
+  @media (max-height: 720px) {
+    width: calc(100% - 146px);
+  }
+  .p-scrollpanel {
+    height: 100%;
+    max-height: 100%;
+    width: 100%;
+    max-width: 1032px;
+    margin: 0 auto;
+    :deep(.p-scrollpanel-bar-y) {
+      background-color: var(--surface-400);
+      border-radius: 10px;
+      width: 10px;
+    }
+  }
 }
 .p-editor-container {
   width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  height: 100%;
   position: relative;
   overflow: hidden;
   :deep(.p-editor-toolbar) {
     position: fixed;
-    right: 20px;
+    right: 32px;
     top: 50%;
     --height: 600px;
     height: var(--height);
@@ -115,6 +131,8 @@ const enabledFormats = [
     border: none !important;
     .ql-editor {
       background-color: transparent !important;
+      color: var(--text-color);
+      padding-bottom: 60px;
     }
   }
 }

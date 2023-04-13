@@ -30,7 +30,7 @@ function closeSettings() {
   padding-right: 16px;
   margin: 0 auto;
   :deep(.p-scrollpanel-bar-y) {
-    background-color: var(--bluegray-200);
+    background-color: var(--surface-400);
     border-radius: 10px;
     width: 10px;
   }
