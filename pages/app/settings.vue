@@ -16,6 +16,8 @@ function closeSettings() {
       <SettingsUsername />
       <Divider />
       <SettingsProfilePhoto />
+      <Divider />
+      <SettingsNoteDates />
     </div>
   </ScrollPanel>
 </template>

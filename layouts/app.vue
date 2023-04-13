@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const userData = useUserData();
+const userData = useSharedUserData();
 
 const theme = computed(() => userData.data.value?.theme ?? "light");
 </script>

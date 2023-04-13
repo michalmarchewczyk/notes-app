@@ -1,6 +1,6 @@
 <script setup lang="ts">
 onMounted(() => {
-  const userData = useUserData();
+  const userData = useSharedUserData();
 
   watch(
     () => userData.data.value,

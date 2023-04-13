@@ -17,12 +17,15 @@ const sortMethod = ref("title-asc");
 
 const sortMethods: Record<
   string,
-  (a: TreeNode & { data: NoteData | FolderData }, b: TreeNode & { data: NoteData | FolderData }) => number
+  (
+    a: Omit<TreeNode, "data"> & { data: NoteData | FolderData },
+    b: Omit<TreeNode, "data"> & { data: NoteData | FolderData }
+  ) => number
 > = {
   "title-asc": (a, b) => a.data.title.localeCompare(b.data.title),
   "title-desc": (a, b) => b.data.title.localeCompare(a.data.title),
-  "created-asc": (a, b) => a.data.created - b.data.created,
-  "created-desc": (a, b) => b.data.created - a.data.created,
+  "created-asc": (a, b) => a.data.created.nanoseconds - b.data.created.nanoseconds,
+  "created-desc": (a, b) => b.data.created.nanoseconds - a.data.created.nanoseconds,
 };
 
 function getNode(data: NoteData | FolderData) {
@@ -37,7 +40,7 @@ function getNode(data: NoteData | FolderData) {
     data,
     ref: doc("parent" in data ? foldersRef : notesRef, data.id),
     children: [],
-  } as TreeNode & { data: NoteData | FolderData };
+  } as Omit<TreeNode, "data"> & { data: NoteData | FolderData };
 }
 
 const noteNodes = computed(() => {

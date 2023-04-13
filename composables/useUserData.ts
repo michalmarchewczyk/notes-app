@@ -4,9 +4,10 @@ interface UserData {
   noteTabs: string[];
   lastOpened: string[];
   theme: "light" | "dark";
+  noteDates: boolean;
 }
 
-export const useUserData = () => {
+const useUserData = () => {
   const db = useDatabase();
 
   const user = useCurrentUser();
@@ -37,3 +38,5 @@ export const useUserData = () => {
 
   return { data: userData, set: setUserData, update: updateUserData };
 };
+
+export const useSharedUserData = createSharedComposable(useUserData);

@@ -1,10 +1,10 @@
-import { FieldValue } from "@firebase/firestore";
+import { Timestamp } from "@firebase/firestore";
 
 interface NoteData {
   id: string;
   owner: string;
   title: string;
-  created: FieldValue;
+  created: Timestamp;
   folder: string | null;
 }
 
