@@ -19,6 +19,7 @@ import SelectButton from "primevue/selectbutton";
 import FileUpload from "primevue/fileupload";
 import ProgressBar from "primevue/progressbar";
 import Editor from "primevue/editor";
+import Dropdown from "primevue/dropdown";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -41,4 +42,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("FileUpload", FileUpload);
   nuxtApp.vueApp.component("ProgressBar", ProgressBar);
   nuxtApp.vueApp.component("Editor", Editor);
+  nuxtApp.vueApp.component("Dropdown", Dropdown);
 });
