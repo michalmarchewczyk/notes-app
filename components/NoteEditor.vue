@@ -12,6 +12,8 @@ const noteData = useNoteData(props.noteKey);
 
 const contentValue = ref("");
 
+const saving = ref(false);
+
 let editorInstance: Quill | undefined;
 function loadEditor(editor: { instance: Quill }) {
   editorInstance = editor.instance;
@@ -21,11 +23,13 @@ const lastUpdates = ref<string[]>([]);
 
 watchDebounced(
   contentValue,
-  () => {
+  async () => {
     if (contentValue.value && noteData.data.value?.content !== contentValue.value) {
+      saving.value = true;
       lastUpdates.value.push(contentValue.value.replaceAll("<p><br></p>", "<br>"));
       lastUpdates.value = lastUpdates.value.slice(-10);
-      noteData.update({ content: contentValue.value.replaceAll("<p><br></p>", "<br>") });
+      await noteData.update({ content: contentValue.value.replaceAll("<p><br></p>", "<br>") });
+      saving.value = false;
     }
   },
   { debounce: 200, maxWait: 500 }
@@ -81,6 +85,7 @@ const enabledFormats = [
         </template>
       </Editor>
     </ScrollPanel>
+    <span class="saving">{{ saving ? "Saving..." : "Saved" }}</span>
   </div>
 </template>
 
@@ -133,7 +138,17 @@ const enabledFormats = [
       background-color: transparent !important;
       color: var(--text-color);
       padding-bottom: 60px;
+      min-height: calc(100vh - 100px);
     }
   }
+}
+.saving {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-color);
+  opacity: 0.3;
 }
 </style>
