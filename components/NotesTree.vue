@@ -4,7 +4,6 @@ import { TreeNode } from "primevue/tree";
 import { vOnClickOutside } from "@vueuse/components";
 import NoteData from "~/utils/NoteData";
 import FolderData from "~/utils/FolderData";
-import NotesTreeNode from "~/components/NotesTreeNode.vue";
 
 const user = useCurrentUser();
 const db = useFirestore();
@@ -14,19 +13,31 @@ const notesRef = collection(db, "notes");
 const folders = useSharedFolders();
 const notes = useSharedNotes();
 
+const sortMethod = ref("title-asc");
+
+const sortMethods: Record<
+  string,
+  (a: TreeNode & { data: NoteData | FolderData }, b: TreeNode & { data: NoteData | FolderData }) => number
+> = {
+  "title-asc": (a, b) => a.data.title.localeCompare(b.data.title),
+  "title-desc": (a, b) => b.data.title.localeCompare(a.data.title),
+  "created-asc": (a, b) => a.data.created - b.data.created,
+  "created-desc": (a, b) => b.data.created - a.data.created,
+};
+
 function getNode(data: NoteData | FolderData) {
   return {
     key: data.id,
     label: data.title,
-    icon: "ti " + ("parent" in data ? "ti-folder" : "ti-file"),
+    icon: "ti " + ("parent" in data ? "ti-folder-filled" : "ti-file"),
     collapsedIcon: "ti ti-chevron-right",
     expandedIcon: "ti ti-chevron-down",
     type: "parent" in data ? "folder" : "note",
     parent: "parent" in data ? data.parent : data.folder,
-    note: data,
+    data,
     ref: doc("parent" in data ? foldersRef : notesRef, data.id),
     children: [],
-  } as TreeNode;
+  } as TreeNode & { data: NoteData | FolderData };
 }
 
 const noteNodes = computed(() => {
@@ -39,12 +50,12 @@ const tree = computed(() => {
   fNodes.forEach((folderNode) => {
     const childrenNotes = nNodes.filter((noteNode) => noteNode.parent === folderNode.key);
     const childrenFolders = fNodes.filter((fNode) => fNode.parent === folderNode.key);
-    folderNode.children = [...childrenFolders, ...childrenNotes];
+    folderNode.children = [...childrenFolders, ...childrenNotes].sort(sortMethods[sortMethod.value]);
   });
   return [
     ...[...fNodes].filter((folderNode) => folderNode.parent === null),
     ...[...nNodes].filter((noteNode) => noteNode.parent === null),
-  ];
+  ].sort(sortMethods[sortMethod.value]);
 });
 
 const selectedKey = ref<Record<string, boolean> | null>(null);
@@ -102,17 +113,13 @@ function openNode(node: TreeNode) {
     navigateTo(`/app/notes/${node.key}`);
   }
 }
-
-const search = ref("");
 </script>
 
 <template>
   <div v-on-click-outside="unselect" class="tree-container">
     <div class="buttons-container">
-      <span class="p-input-icon-left flex-1">
-        <i class="ti ti-search" />
-        <InputText v-model="search" placeholder="Search" />
-      </span>
+      <NotesTreeSortMenu v-model:sort-method="sortMethod" />
+      <div class="flex-1" />
       <Button icon="ti ti-folder-plus" text @click="addFolder()" />
       <Button icon="ti ti-file-plus" text @click="addNote()" />
     </div>
@@ -163,8 +170,9 @@ const search = ref("");
     }
   }
   button {
+    height: 3rem;
     :deep(.ti) {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
     }
   }
 }
