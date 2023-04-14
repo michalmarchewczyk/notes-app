@@ -77,7 +77,7 @@ function turnHeaderOff() {
           rounded
           text
           :value="item.value"
-          :class="{ 'ql-active': !selectedHeader, ti: true, 'ti-heading-off': true }"
+          :class="{ active: !selectedHeader, ti: true, 'ti-heading-off': true }"
           @click="turnHeaderOff"
         >
         </Button>
@@ -111,7 +111,8 @@ button {
   height: 36px !important;
   padding-left: 6px !important;
   color: var(--bluegray-500) !important;
-  &.ql-active {
+  &.ql-active,
+  &.active {
     color: var(--surface-a) !important;
     background-color: var(--bluegray-700) !important;
   }
@@ -120,7 +121,8 @@ button {
 :global(*[data-theme="dark"] .toolbar button) {
   color: var(--bluegray-300) !important;
 }
-:global(*[data-theme="dark"] .toolbar button.ql-active) {
+:global(*[data-theme="dark"] .toolbar button.ql-active),
+:global(*[data-theme="dark"] .toolbar button.active) {
   color: var(--surface-a) !important;
   background-color: var(--bluegray-200) !important;
 }
