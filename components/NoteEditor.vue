@@ -90,6 +90,7 @@ const enabledFormats = [
 </template>
 
 <style scoped lang="scss">
+@import "../assets/editor-styles.scss";
 .editor-container {
   height: 100%;
   max-height: 100%;
@@ -124,7 +125,7 @@ const enabledFormats = [
     margin-top: calc(var(--height) / -2);
     width: 56px;
     border: none !important;
-    z-index: 100;
+    z-index: 10000;
     background-color: transparent !important;
     @media (max-height: 720px) {
       --height: 304px;
@@ -136,9 +137,12 @@ const enabledFormats = [
     border: none !important;
     .ql-editor {
       background-color: transparent !important;
-      color: var(--text-color);
       padding-bottom: 60px;
       min-height: calc(100vh - 100px);
+      @include editor-styles;
+    }
+    .ql-tooltip {
+      @include editor-tooltip-styles;
     }
   }
 }
@@ -150,5 +154,8 @@ const enabledFormats = [
   font-size: 18px;
   color: var(--text-color);
   opacity: 0.3;
+  z-index: 10000;
+  user-select: none;
+  pointer-events: none;
 }
 </style>
