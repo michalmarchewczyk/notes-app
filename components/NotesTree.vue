@@ -24,8 +24,8 @@ const sortMethods: Record<
 > = {
   "title-asc": (a, b) => a.data.title.localeCompare(b.data.title),
   "title-desc": (a, b) => b.data.title.localeCompare(a.data.title),
-  "created-asc": (a, b) => a.data.created.nanoseconds - b.data.created.nanoseconds,
-  "created-desc": (a, b) => b.data.created.nanoseconds - a.data.created.nanoseconds,
+  "created-asc": (a, b) => a.data.created.seconds - b.data.created.seconds,
+  "created-desc": (a, b) => b.data.created.seconds - a.data.created.seconds,
 };
 
 function getNode(data: NoteData | FolderData) {
