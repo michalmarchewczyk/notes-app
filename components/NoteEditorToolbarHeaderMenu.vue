@@ -38,6 +38,14 @@ const disableHeaderMenu = [
   },
   { ignore: [headerMenuButton] },
 ];
+
+function turnHeaderOff() {
+  [h1Button, h2Button, h3Button, h4Button, h5Button, h6Button].forEach((button) => {
+    if (button.value?.$el?.classList.contains("ql-active")) {
+      button.value?.$el?.click();
+    }
+  });
+}
 </script>
 
 <template>
@@ -52,17 +60,27 @@ const disableHeaderMenu = [
   <div v-on-click-outside="disableHeaderMenu" class="header-menu-container">
     <Menu
       class="shadow-5"
-      :model="[1, 2, 3, 4, 5, 6].map((value) => ({ value }))"
+      :model="[1, 2, 3, 4, 5, 6, false].map((value) => ({ value }))"
       :class="{ 'menu-hidden': !headerMenuVisible }"
     >
       <template #item="{ item }">
         <Button
+          v-if="item.value"
           :ref="`h${item.value}Button`"
           :class="`ql-header ti ti-h-${item.value}`"
           rounded
           text
           :value="item.value"
         />
+        <Button
+          v-else
+          rounded
+          text
+          :value="item.value"
+          :class="{ 'ql-active': !selectedHeader, ti: true, 'ti-heading-off': true }"
+          @click="turnHeaderOff"
+        >
+        </Button>
       </template>
     </Menu>
   </div>
@@ -79,7 +97,7 @@ const disableHeaderMenu = [
   right: 40px !important;
   top: -48px !important;
   padding: 6px !important;
-  width: 230px !important;
+  width: 264px !important;
   border: none !important;
   &.menu-hidden {
     visibility: hidden !important;
