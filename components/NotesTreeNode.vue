@@ -31,6 +31,10 @@ async function disableRename() {
     await setDoc(props.node.ref, { title: renameValue.value }, { merge: true });
   }
 }
+
+defineExpose({
+  enableRename,
+});
 </script>
 
 <template>

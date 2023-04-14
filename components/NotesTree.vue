@@ -4,6 +4,9 @@ import { TreeNode } from "primevue/tree";
 import { vOnClickOutside } from "@vueuse/components";
 import NoteData from "~/utils/NoteData";
 import FolderData from "~/utils/FolderData";
+import NoteContextMenu from "~/components/NoteContextMenu.vue";
+import NotesTreeNode from "~/components/NotesTreeNode.vue";
+import FolderContextMenu from "~/components/FolderContextMenu.vue";
 
 const user = useCurrentUser();
 const db = useFirestore();
@@ -13,15 +16,10 @@ const notesRef = collection(db, "notes");
 const folders = useSharedFolders();
 const notes = useSharedNotes();
 
-const sortMethod = ref("title-asc");
+type TreeNodeWithData = Omit<TreeNode, "data"> & { data: NoteData | FolderData };
 
-const sortMethods: Record<
-  string,
-  (
-    a: Omit<TreeNode, "data"> & { data: NoteData | FolderData },
-    b: Omit<TreeNode, "data"> & { data: NoteData | FolderData }
-  ) => number
-> = {
+const sortMethod = ref("title-asc");
+const sortMethods: Record<string, (a: TreeNodeWithData, b: TreeNodeWithData) => number> = {
   "title-asc": (a, b) => a.data.title.localeCompare(b.data.title),
   "title-desc": (a, b) => b.data.title.localeCompare(a.data.title),
   "created-asc": (a, b) => a.data.created.seconds - b.data.created.seconds,
@@ -40,7 +38,7 @@ function getNode(data: NoteData | FolderData) {
     data,
     ref: doc("parent" in data ? foldersRef : notesRef, data.id),
     children: [],
-  } as Omit<TreeNode, "data"> & { data: NoteData | FolderData };
+  } as TreeNodeWithData;
 }
 
 const noteNodes = computed(() => {
@@ -64,12 +62,8 @@ const tree = computed(() => {
 const selectedKey = ref<Record<string, boolean> | null>(null);
 const expandedKeys = ref<Record<string, boolean>>({});
 
-const nodeRefs = ref<Record<string, HTMLDivElement>>({});
-function handleRef(el: HTMLDivElement, key: string) {
-  if (el) {
-    nodeRefs.value[key] = el;
-  }
-}
+const nodeElementRefs = ref<Record<string, HTMLDivElement>>({});
+const nodeRefs = ref<Record<string, InstanceType<typeof NotesTreeNode>>>({});
 
 async function addNote() {
   let parent = Object.keys(selectedKey.value ?? {})[0] ?? null;
@@ -86,7 +80,7 @@ async function addNote() {
   if (parent && expandedKeys.value) {
     expandedKeys.value[parent] = true;
   }
-  nodeRefs.value[doc.id]?.scrollIntoView({ block: "end" });
+  nodeElementRefs.value[doc.id]?.scrollIntoView({ block: "end" });
   openNode({ key: doc.id, type: "note" });
 }
 async function addFolder() {
@@ -104,7 +98,7 @@ async function addFolder() {
   if (parent && expandedKeys.value) {
     expandedKeys.value[parent] = true;
   }
-  nodeRefs.value[doc.id]?.scrollIntoView({ block: "end" });
+  nodeElementRefs.value[doc.id]?.scrollIntoView({ block: "end" });
 }
 
 function unselect() {
@@ -114,6 +108,34 @@ function unselect() {
 function openNode(node: TreeNode) {
   if (node.type === "note") {
     navigateTo(`/app/notes/${node.key}`);
+  }
+}
+
+const contextNote = ref<NoteData | null>(null);
+const contextFolder = ref<FolderData | null>(null);
+const noteContextMenu = ref<InstanceType<typeof NoteContextMenu> | null>(null);
+const folderContextMenu = ref<InstanceType<typeof FolderContextMenu> | null>(null);
+
+function openContextMenu(event: MouseEvent) {
+  let element = event.target as HTMLElement;
+  let count = 0;
+  while (count < 6 && element.parentElement && !element.classList.contains("p-treenode")) {
+    element = element.parentElement;
+    count += 1;
+  }
+  if (!element.classList.contains("p-treenode")) return;
+  const nodeKey = element.children[0].children[2].children[0].getAttribute("data-node");
+  if (!nodeKey) return;
+  const note = notes.value.find((n) => n.id === nodeKey);
+  const folder = folders.value.find((f) => f.id === nodeKey);
+  if (note) {
+    contextNote.value = note ?? null;
+    noteContextMenu.value?.openMenu(event);
+    folderContextMenu.value?.closeMenu();
+  } else if (folder) {
+    contextFolder.value = folder ?? null;
+    folderContextMenu.value?.openMenu(event);
+    noteContextMenu.value?.closeMenu();
   }
 }
 </script>
@@ -138,15 +160,18 @@ function openNode(node: TreeNode) {
           :value="tree"
           selection-mode="single"
           @node-select="openNode"
+          @contextmenu="openContextMenu"
         >
           <template #default="slotProps">
-            <div :ref="(el) => handleRef(el, slotProps.node.key)">
-              <NotesTreeNode :node="slotProps.node" />
+            <div :ref="(el) => (nodeElementRefs[slotProps.node.key] = el)" :data-node="slotProps.node.key">
+              <NotesTreeNode :ref="(el) => (nodeRefs[slotProps.node.key] = el)" :node="slotProps.node" />
             </div>
           </template>
         </Tree>
       </ScrollPanel>
     </div>
+    <NoteContextMenu ref="noteContextMenu" :note="contextNote" @rename="(id) => nodeRefs[id]?.enableRename()" />
+    <FolderContextMenu ref="folderContextMenu" :folder="contextFolder" @rename="(id) => nodeRefs[id]?.enableRename()" />
   </div>
 </template>
 

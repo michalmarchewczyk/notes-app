@@ -21,6 +21,7 @@ import ProgressBar from "primevue/progressbar";
 import Editor from "primevue/editor";
 import Dropdown from "primevue/dropdown";
 import InputSwitch from "primevue/inputswitch";
+import ContextMenu from "primevue/contextmenu";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
@@ -45,4 +46,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Editor", Editor);
   nuxtApp.vueApp.component("Dropdown", Dropdown);
   nuxtApp.vueApp.component("InputSwitch", InputSwitch);
+  nuxtApp.vueApp.component("ContextMenu", ContextMenu);
 });
