@@ -5,6 +5,7 @@ import FolderData from "~/utils/FolderData";
 
 const props = defineProps<{
   folder: FolderData;
+  appendTo?: string;
 }>();
 
 const menu = ref<ContextMenu | null>(null);
@@ -28,6 +29,9 @@ const emit = defineEmits<{
 
 const items = computed<MenuItem[]>(() => [
   {
+    separator: true,
+  },
+  {
     label: "Rename",
     icon: "ti ti-edit",
     command: () => emit("rename", props.folder?.id),
@@ -41,7 +45,21 @@ const items = computed<MenuItem[]>(() => [
 </script>
 
 <template>
-  <ContextMenu ref="menu" :model="items"></ContextMenu>
+  <ContextMenu
+    ref="menu"
+    :model="items"
+    :append-to="props.appendTo"
+    class="folder-contextmenu"
+    :data-title="props.folder?.title"
+  ></ContextMenu>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+:global(.folder-contextmenu::before) {
+  content: attr(data-title);
+  display: block;
+  position: relative;
+  padding: 6px 20px;
+  font-weight: 600;
+}
+</style>

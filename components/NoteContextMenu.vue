@@ -5,6 +5,7 @@ import NoteData from "~/utils/NoteData";
 
 const props = defineProps<{
   note: NoteData;
+  appendTo?: string;
 }>();
 
 const menu = ref<ContextMenu | null>(null);
@@ -28,6 +29,9 @@ const emit = defineEmits<{
 
 const items = computed<MenuItem[]>(() => [
   {
+    separator: true,
+  },
+  {
     label: "Rename",
     icon: "ti ti-edit",
     command: () => emit("rename", props.note?.id),
@@ -41,7 +45,21 @@ const items = computed<MenuItem[]>(() => [
 </script>
 
 <template>
-  <ContextMenu ref="menu" :model="items"></ContextMenu>
+  <ContextMenu
+    ref="menu"
+    :model="items"
+    :append-to="props.appendTo"
+    class="note-contextmenu"
+    :data-title="props.note?.title"
+  ></ContextMenu>
 </template>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+:global(.note-contextmenu::before) {
+  content: attr(data-title);
+  display: block;
+  position: relative;
+  padding: 6px 20px;
+  font-weight: 600;
+}
+</style>

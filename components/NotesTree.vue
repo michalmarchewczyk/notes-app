@@ -170,8 +170,18 @@ function openContextMenu(event: MouseEvent) {
         </Tree>
       </ScrollPanel>
     </div>
-    <NoteContextMenu ref="noteContextMenu" :note="contextNote" @rename="(id) => nodeRefs[id]?.enableRename()" />
-    <FolderContextMenu ref="folderContextMenu" :folder="contextFolder" @rename="(id) => nodeRefs[id]?.enableRename()" />
+    <NoteContextMenu
+      ref="noteContextMenu"
+      :note="contextNote"
+      append-to=".tree-container"
+      @rename="(id) => nodeRefs[id]?.enableRename()"
+    />
+    <FolderContextMenu
+      ref="folderContextMenu"
+      :folder="contextFolder"
+      append-to=".tree-container"
+      @rename="(id) => nodeRefs[id]?.enableRename()"
+    />
   </div>
 </template>
 
