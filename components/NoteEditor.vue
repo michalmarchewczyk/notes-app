@@ -79,7 +79,14 @@ const enabledFormats = [
 <template>
   <div class="editor-container">
     <ScrollPanel>
-      <Editor v-model="contentValue" :formats="enabledFormats" @load="loadEditor">
+      <Editor
+        v-model="contentValue"
+        :formats="enabledFormats"
+        :modules="{
+          QuillMarkdown: true,
+        }"
+        @load="loadEditor"
+      >
         <template #toolbar>
           <NoteEditorToolbar />
         </template>
