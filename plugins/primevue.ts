@@ -22,9 +22,12 @@ import Editor from "primevue/editor";
 import Dropdown from "primevue/dropdown";
 import InputSwitch from "primevue/inputswitch";
 import ContextMenu from "primevue/contextmenu";
+import ConfirmationService from "primevue/confirmationservice";
+import ConfirmDialog from "primevue/confirmdialog";
 
 export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.use(PrimeVue, { ripple: true });
+  nuxtApp.vueApp.use(ConfirmationService);
   nuxtApp.vueApp.directive("tooltip", Tooltip);
   nuxtApp.vueApp.component("Button", Button);
   nuxtApp.vueApp.component("InputText", InputText);
@@ -47,4 +50,5 @@ export default defineNuxtPlugin((nuxtApp) => {
   nuxtApp.vueApp.component("Dropdown", Dropdown);
   nuxtApp.vueApp.component("InputSwitch", InputSwitch);
   nuxtApp.vueApp.component("ContextMenu", ContextMenu);
+  nuxtApp.vueApp.component("ConfirmDialog", ConfirmDialog);
 });

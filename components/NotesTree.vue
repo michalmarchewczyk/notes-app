@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
 import { TreeNode } from "primevue/tree";
 import { vOnClickOutside } from "@vueuse/components";
+import { useConfirm } from "primevue/useconfirm";
 import NoteData from "~/utils/NoteData";
 import FolderData from "~/utils/FolderData";
 import NoteContextMenu from "~/components/NoteContextMenu.vue";
 import NotesTreeNode from "~/components/NotesTreeNode.vue";
 import FolderContextMenu from "~/components/FolderContextMenu.vue";
 
+const confirm = useConfirm();
 const user = useCurrentUser();
 const db = useFirestore();
 const foldersRef = collection(db, "folders");
@@ -101,6 +103,39 @@ async function addFolder() {
   nodeElementRefs.value[doc.id]?.scrollIntoView({ block: "end" });
 }
 
+function deleteNote(id: string) {
+  const note = notes.value.find((note) => note.id === id);
+  if (!note) return;
+  confirm.require({
+    message: "Are you sure you want to delete this note?",
+    header: "Delete note " + note.title + "?",
+    icon: "ti ti-alert-triangle",
+    accept: async () => {
+      await deleteDoc(doc(notesRef, id));
+      if (selectedKey.value && selectedKey.value[id]) {
+        unselect();
+      }
+    },
+  });
+}
+
+function deleteFolder(id: string) {
+  const folder = folders.value.find((folder) => folder.id === id);
+  if (!folder) return;
+  confirm.require({
+    message: "Are you sure you want to delete this folder?",
+    header: "Delete folder " + folder.title + "?",
+    icon: "ti ti-alert-triangle",
+    accept: async () => {
+      // TODO: move children to parent
+      await deleteDoc(doc(foldersRef, id));
+      if (selectedKey.value && selectedKey.value[id]) {
+        unselect();
+      }
+    },
+  });
+}
+
 function unselect() {
   selectedKey.value = {};
 }
@@ -142,6 +177,7 @@ function openContextMenu(event: MouseEvent) {
 
 <template>
   <div v-on-click-outside="unselect" class="tree-container">
+    <ConfirmDialog :draggable="false" />
     <div class="buttons-container">
       <NotesTreeSortMenu v-model:sort-method="sortMethod" />
       <div class="flex-1" />
@@ -175,12 +211,14 @@ function openContextMenu(event: MouseEvent) {
       :note="contextNote"
       append-to=".tree-container"
       @rename="(id) => nodeRefs[id]?.enableRename()"
+      @delete="(id) => deleteNote(id)"
     />
     <FolderContextMenu
       ref="folderContextMenu"
       :folder="contextFolder"
       append-to=".tree-container"
       @rename="(id) => nodeRefs[id]?.enableRename()"
+      @delete="(id) => deleteFolder(id)"
     />
   </div>
 </template>
