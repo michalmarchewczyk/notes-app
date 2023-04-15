@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
+import Button from "primevue/button";
 
 const selectedValues = reactive([false, false, false, false, false, false]);
 
@@ -8,12 +9,7 @@ const selectedHeader = computed(() => {
   return index === -1 ? false : index + 1;
 });
 
-const h1Button = ref(null);
-const h2Button = ref(null);
-const h3Button = ref(null);
-const h4Button = ref(null);
-const h5Button = ref(null);
-const h6Button = ref(null);
+const headerButtonsRefs = ref<Record<string, InstanceType<typeof Button>>>({});
 
 const hCallback = (value: number) => (mutations: MutationRecord[]) => {
   mutations
@@ -23,9 +19,14 @@ const hCallback = (value: number) => (mutations: MutationRecord[]) => {
     });
 };
 
-[h1Button, h2Button, h3Button, h4Button, h5Button, h6Button].forEach((button, index) => {
-  useMutationObserver(button, hCallback(index + 1), { attributes: true });
-});
+watchOnce(
+  () => Object.values(headerButtonsRefs.value).length === 6,
+  () => {
+    Object.values(headerButtonsRefs.value).forEach((button: any, index) => {
+      useMutationObserver(button, hCallback(index + 1), { attributes: true });
+    });
+  }
+);
 
 const headerMenuVisible = ref(false);
 const headerMenuButton = ref(null);
@@ -40,9 +41,9 @@ const disableHeaderMenu = [
 ];
 
 function turnHeaderOff() {
-  [h1Button, h2Button, h3Button, h4Button, h5Button, h6Button].forEach((button) => {
-    if (button.value?.$el?.classList.contains("ql-active")) {
-      button.value?.$el?.click();
+  Object.values(headerButtonsRefs.value).forEach((button) => {
+    if (button.$el?.classList.contains("ql-active")) {
+      button.$el?.click();
     }
   });
 }
@@ -66,7 +67,7 @@ function turnHeaderOff() {
       <template #item="{ item }">
         <Button
           v-if="item.value"
-          :ref="`h${item.value}Button`"
+          :ref="(el) => (headerButtonsRefs[item.value] = el)"
           :class="`ql-header ti ti-h-${item.value}`"
           rounded
           text
