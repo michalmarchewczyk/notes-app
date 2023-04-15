@@ -69,7 +69,7 @@ function login(provider: AuthProvider) {
 </script>
 
 <template>
-  <Card class="w-20rem">
+  <Card class="w-20rem shadow-6">
     <template #title> Login {{ error }} </template>
     <template #content>
       <div class="flex flex-column align-items-stretch gap-3">
