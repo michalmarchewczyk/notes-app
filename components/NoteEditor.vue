@@ -117,6 +117,7 @@ const enabledFormats = [
       border-radius: 10px;
       width: 10px;
       z-index: 0;
+      margin-left: 10px;
     }
   }
 }
