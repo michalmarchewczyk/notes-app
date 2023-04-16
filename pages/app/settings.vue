@@ -1,4 +1,8 @@
 <script setup lang="ts">
+useHead({
+  title: "Settings - Notes App",
+});
+
 function closeSettings() {
   navigateTo("/app");
 }

@@ -3,6 +3,10 @@ definePageMeta({
   middleware: ["auth"],
   layout: "app",
 });
+
+useHead({
+  title: "Notes App",
+});
 </script>
 
 <template>

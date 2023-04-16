@@ -11,6 +11,10 @@ definePageMeta({
   layout: "auth",
 });
 
+useHead({
+  title: "Sign up - Notes App",
+});
+
 const googleAuthProvider = new GoogleAuthProvider();
 const githubAuthProvider = new GithubAuthProvider();
 googleAuthProvider.addScope("email");

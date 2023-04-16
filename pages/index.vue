@@ -1,4 +1,8 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+useHead({
+  title: "Notes App",
+});
+</script>
 
 <template>
   <div class="container">
