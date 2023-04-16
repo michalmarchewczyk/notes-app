@@ -8,6 +8,16 @@ export default defineNuxtConfig({
     "@/assets/main.scss",
     "@/assets/dark-theme.scss",
   ],
+  app: {
+    head: {
+      link: [
+        {
+          rel: "icon",
+          href: "/favicon.png",
+        },
+      ],
+    },
+  },
   build: {
     transpile: ["primevue"],
   },
