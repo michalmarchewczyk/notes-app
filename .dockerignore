@@ -1,12 +1,7 @@
 node_modules
-*.log*
 .nuxt
-.nitro
-.cache
-.output
-.env
-dist
-.DS_Store
-
+.git
 .idea
+.output
+.github
 firebase-service-account-file.json

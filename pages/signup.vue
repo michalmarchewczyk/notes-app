@@ -4,7 +4,7 @@ import {
   GithubAuthProvider,
   AuthProvider,
   signInWithPopup,
-  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "@firebase/auth";
 
 definePageMeta({
@@ -26,23 +26,24 @@ const password = ref("");
 const loadingEmail = ref(false);
 const error = ref("");
 
-function loginEmail() {
+function createEmail() {
   if (!auth) {
     return;
   }
   loadingEmail.value = true;
-  signInWithEmailAndPassword(auth, email.value, password.value)
+  createUserWithEmailAndPassword(auth, email.value, password.value)
     .then(() => {
       loadingEmail.value = false;
       navigateTo(route.query.redirect?.toString() || "/app");
     })
-    .catch(async (err) => {
-      await new Promise((resolve) => setTimeout(resolve, 5000));
+    .catch((err) => {
       loadingEmail.value = false;
       if (err.code === "auth/invalid-email") {
         error.value = "Invalid email address";
-      } else if (["auth/wrong-password", "auth/user-not-found", "auth/user-disabled"].includes(err.code)) {
-        error.value = "Invalid email or password";
+      } else if (err.code === "auth/email-already-in-use") {
+        error.value = "Email already in use";
+      } else if (err.code === "auth/weak-password") {
+        error.value = "Password is too weak";
       } else {
         error.value = "Something went wrong";
       }
@@ -70,10 +71,10 @@ function login(provider: AuthProvider) {
 
 <template>
   <Card class="w-20rem shadow-6">
-    <template #title> Login {{ error }} </template>
+    <template #title> Create account {{ error }} </template>
     <template #content>
       <div class="flex flex-column align-items-stretch gap-3">
-        <form class="flex flex-column align-items-stretch gap-3" @submit.prevent="loginEmail">
+        <form class="flex flex-column align-items-stretch gap-3" @submit.prevent="createEmail">
           <div class="flex flex-column gap-2">
             <label for="email">Email</label>
             <InputText id="email" v-model="email" type="email" required @input="error = ''" />
@@ -87,22 +88,22 @@ function login(provider: AuthProvider) {
             {{ error }}
           </InlineMessage>
           <Button
-            icon="ti ti-login"
+            icon="ti ti-user-plus"
             loading-icon="ti ti-spin ti-loader-2"
-            label="Login"
+            label="Sign up"
             type="submit"
             :loading="loadingEmail"
           />
         </form>
-        <NuxtLink to="/signup">
-          <Button icon="ti ti-user-plus" label="Create Account" outlined class="w-full" />
+        <NuxtLink to="/login">
+          <Button icon="ti ti-login" label="Login" outlined class="w-full" />
         </NuxtLink>
         <Divider align="center" class="my-2"> or </Divider>
         <Button
           icon="ti ti-brand-google"
           :loading="loading[googleAuthProvider.providerId]"
           loading-icon="ti ti-spin ti-loader-2"
-          label="Login with Google"
+          label="Sign up with Google"
           severity="info"
           class="bg-blue-500"
           @click="login(googleAuthProvider)"
@@ -111,7 +112,7 @@ function login(provider: AuthProvider) {
           icon="ti ti-brand-github"
           :loading="loading[githubAuthProvider.providerId]"
           loading-icon="ti ti-spin ti-loader-2"
-          label="Login with GitHub"
+          label="Sign up with GitHub"
           severity="secondary"
           class="surface-800"
           @click="login(githubAuthProvider)"

@@ -1,38 +1,38 @@
 {
-  "name": "marchewczyk-notes",
-  "version": "1.0.0",
+  "name": "notes-app",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "emulators": "firebase emulators:start",
     "build": "nuxt build",
-    "start": "nuxt start",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
-    "lint": "npm run lint:js"
-  },
-  "dependencies": {
-    "@nuxtjs/firebase": "^7.3.1",
-    "core-js": "^3.6.5",
-    "firebase": "^8.2.2",
-    "moment": "^2.29.1",
-    "nuxt": "^2.14.6"
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint --ext .js,.ts,.vue --ignore-path .gitignore ."
   },
   "devDependencies": {
-    "@nuxt/types": "^2.14.12",
-    "@nuxtjs/eslint-config": "^3.1.0",
-    "@nuxtjs/eslint-module": "^2.0.0",
-    "@nuxtjs/pwa": "^3.3.4",
-    "@nuxtjs/tailwindcss": "^3.4.2",
-    "autoprefixer": "^9.8.6",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.10.0",
-    "eslint-plugin-nuxt": "^1.0.0",
-    "postcss": "^7.0.35",
-    "sass": "^1.32.4",
-    "sass-loader": "^10.1.1",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "vue": "^2.6.12",
-    "vuex": "^3.6.0"
+    "@nuxtjs/eslint-config-typescript": "^12.0.0",
+    "@types/quill": "^2.0.10",
+    "@typescript-eslint/parser": "^5.57.0",
+    "@vueuse/components": "^9.13.0",
+    "@vueuse/core": "^9.13.0",
+    "@vueuse/nuxt": "^9.13.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nuxt": "^3.3.2",
+    "prettier": "^2.8.7",
+    "sass": "^1.60.0"
+  },
+  "dependencies": {
+    "@firebase/app-types": "^0.9.0",
+    "@tabler/icons-webfont": "^2.14.0",
+    "firebase": "^9.19.1",
+    "firebase-admin": "^11.5.0",
+    "nuxt-vuefire": "^0.1.6",
+    "primeflex": "^3.3.0",
+    "primevue": "^3.26.1",
+    "quill": "^1.3.7",
+    "quilljs-markdown": "^1.2.0",
+    "vuefire": "^3.1.0"
   }
 }
