@@ -1,42 +1,16 @@
-# Nuxt 3 Minimal Starter
+# Notes App
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+### Used technologies
+- [Nuxt 3](https://nuxt.com/)
+- [Vue.js 3](https://vuejs.org/)
+- [Firebase](https://firebase.google.com/)
+- [PrimeVue](https://primevue.org/)
+- [Tabler Icons](https://tabler-icons.io/)
 
-## Setup
 
-Make sure to install the dependencies:
-
-```bash
-# yarn
-yarn install
-
-# npm
-npm install
-
-# pnpm
-pnpm install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`
-
-```bash
-npm run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-npm run build
-```
-
-Locally preview production build:
-
-```bash
-npm run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Features
+- Firebase-based Authentication
+- Notes organization using folders
+- Advanced formatting options
+- Realtime synchronization
+- Dark mode
