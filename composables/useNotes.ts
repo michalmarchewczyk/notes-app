@@ -1,14 +1,49 @@
-import { collection, orderBy, query, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, orderBy, query, serverTimestamp, where } from "firebase/firestore";
+import { useConfirm } from "primevue/useconfirm";
+import { setDoc } from "@firebase/firestore";
 import NoteData from "~/utils/NoteData";
 
 const useNotes = () => {
   const user = useCurrentUser();
   const db = useFirestore();
   const notesRef = collection(db, "notes");
+  const confirm = useConfirm();
 
   const notesQuery = query(notesRef, where("owner", "==", user.value!.uid), orderBy("created", "asc"));
+  const notes = useCollection<NoteData>(notesQuery);
 
-  return useCollection<NoteData>(notesQuery);
+  const addNote = async (parent: string | null) => {
+    if (parent && notes.value?.find((note) => note.id === parent)) {
+      parent = notes.value?.find((note) => note.id === parent)?.folder ?? null;
+    }
+    return await addDoc(notesRef, {
+      owner: user.value?.uid,
+      title: "New Note",
+      created: serverTimestamp(),
+      folder: parent,
+    } as Omit<NoteData, "id">);
+  };
+
+  const deleteNote = (id: string) => {
+    const note = notes.value.find((note) => note.id === id);
+    if (!note) return;
+    confirm.require({
+      message: "Are you sure you want to delete this note?",
+      header: "Delete note " + note.title + "?",
+      icon: "ti ti-alert-triangle",
+      accept: async () => {
+        await deleteDoc(doc(notesRef, id));
+      },
+    });
+  };
+
+  const renameNote = async (id: string, value: string) => {
+    const note = notes.value.find((note) => note.id === id);
+    if (!note) return;
+    await setDoc(doc(notesRef, id), { title: value }, { merge: true });
+  };
+
+  return { notes, addNote, deleteNote, renameNote };
 };
 
 export const useSharedNotes = createSharedComposable(useNotes);

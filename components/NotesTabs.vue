@@ -2,7 +2,7 @@
 import { TabViewChangeEvent } from "primevue/tabview";
 
 const route = useRoute();
-const notes = useSharedNotes();
+const { notes } = useSharedNotes();
 const userData = useSharedUserData();
 
 const activeTab = ref(-1);

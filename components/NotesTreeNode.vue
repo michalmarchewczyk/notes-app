@@ -2,11 +2,13 @@
 import { TreeNode } from "primevue/tree";
 import { vOnClickOutside } from "@vueuse/components";
 import InputText from "primevue/inputtext";
-import { setDoc } from "@firebase/firestore";
 import NoteData from "~/utils/NoteData";
 import FolderData from "~/utils/FolderData";
 
 const userData = useSharedUserData();
+
+const { renameNote } = useSharedNotes();
+const { renameFolder } = useSharedFolders();
 
 const noteDates = computed(() => !!userData.data.value?.noteDates);
 
@@ -28,7 +30,11 @@ async function enableRename() {
 async function disableRename() {
   rename.value = false;
   if (props.node.label !== renameValue.value && renameValue.value !== "") {
-    await setDoc(props.node.ref, { title: renameValue.value }, { merge: true });
+    if (props.node.type === "note") {
+      await renameNote(props.node.data.id, renameValue.value);
+    } else {
+      await renameFolder(props.node.data.id, renameValue.value);
+    }
   }
 }
 

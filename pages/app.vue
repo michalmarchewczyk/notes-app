@@ -14,7 +14,7 @@ useHead({
     <Splitter>
       <SplitterPanel :min-size="10" :size="15" class="menu">
         <ClientOnly>
-          <NotesTree />
+          <NotesTreeView />
         </ClientOnly>
         <UserMenu />
       </SplitterPanel>
