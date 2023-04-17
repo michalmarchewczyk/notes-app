@@ -43,7 +43,13 @@ const useNotes = () => {
     await setDoc(doc(notesRef, id), { title: value }, { merge: true });
   };
 
-  return { notes, addNote, deleteNote, renameNote };
+  const updateNoteParent = async (id: string, value: string | null) => {
+    const note = notes.value.find((note) => note.id === id);
+    if (!note) return;
+    await setDoc(doc(notesRef, id), { folder: value }, { merge: true });
+  };
+
+  return { notes, addNote, deleteNote, renameNote, updateNoteParent };
 };
 
 export const useSharedNotes = createSharedComposable(useNotes);

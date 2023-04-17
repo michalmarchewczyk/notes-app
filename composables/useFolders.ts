@@ -7,7 +7,7 @@ const useFolders = () => {
   const user = useCurrentUser();
   const db = useFirestore();
   const foldersRef = collection(db, "folders");
-  const { notes } = useSharedNotes();
+  const { notes, updateNoteParent } = useSharedNotes();
   const confirm = useConfirm();
 
   const foldersQuery = query(foldersRef, where("owner", "==", user.value!.uid), orderBy("created", "asc"));
@@ -33,6 +33,14 @@ const useFolders = () => {
       header: "Delete folder " + folder.title + "?",
       icon: "ti ti-alert-triangle",
       accept: async () => {
+        const childNotes = notes.value.filter((note) => note.folder === id);
+        const childFolders = folders.value.filter((folder) => folder.parent === id);
+        for (const note of childNotes) {
+          await updateNoteParent(note.id, folder.parent);
+        }
+        for (const f of childFolders) {
+          await updateFolderParent(f.id, folder.parent);
+        }
         await deleteDoc(doc(foldersRef, id));
       },
     });
@@ -44,7 +52,13 @@ const useFolders = () => {
     await setDoc(doc(foldersRef, id), { title: value }, { merge: true });
   };
 
-  return { folders, addFolder, deleteFolder, renameFolder };
+  const updateFolderParent = async (id: string, value: string | null) => {
+    const folder = folders.value.find((folder) => folder.id === id);
+    if (!folder) return;
+    await setDoc(doc(foldersRef, id), { parent: value }, { merge: true });
+  };
+
+  return { folders, addFolder, deleteFolder, renameFolder, updateFolderParent };
 };
 
 export const useSharedFolders = createSharedComposable(useFolders);

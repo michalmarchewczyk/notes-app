@@ -17,7 +17,7 @@ const emit = defineEmits<{
 const { notes } = useSharedNotes();
 const { folders } = useSharedFolders();
 
-const selectedKey = computed<Record<string, boolean> | null>({
+const selectedKey = computed<Record<string, boolean>>({
   get: () => (props.selectedKey ? { [props.selectedKey]: true } : {}),
   set: (v) => emit("update:selectedKey", Object.keys(v ?? {})[0] ?? null),
 });
@@ -81,7 +81,7 @@ watchArray(
     if (added.length > 2) {
       return;
     }
-    if (added[0]) {
+    if (added[0] && !removed[0]) {
       addNode(added[0].id, added[0].folder);
       openNode({ key: added[0].id, type: "note" });
     }
@@ -98,7 +98,7 @@ watchArray(
     if (added.length > 2) {
       return;
     }
-    if (added[0]) {
+    if (added[0] && !removed[0]) {
       addNode(added[0].id, added[0].parent);
     }
     if (!added[0] && removed[0]) {
