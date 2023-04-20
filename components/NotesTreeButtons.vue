@@ -1,6 +1,5 @@
 <script setup lang="ts">
 const selectedKey = useState<string | null>("selectedKey", () => null);
-const selectedSortMethod = useState<string>("selectedSortMethod", () => "title-asc");
 
 const { addFolder } = useSharedFolders();
 const { addNote } = useSharedNotes();
@@ -8,7 +7,7 @@ const { addNote } = useSharedNotes();
 
 <template>
   <div class="buttons-container">
-    <NotesTreeSortMenu v-model:sort-method="selectedSortMethod" />
+    <NotesTreeSortMenu />
     <div class="flex-1" />
     <Button icon="ti ti-folder-plus" text @click="() => addFolder(selectedKey)" />
     <Button icon="ti ti-file-plus" text @click="() => addNote(selectedKey)" />

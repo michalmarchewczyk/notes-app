@@ -5,7 +5,7 @@ import FolderData from "~/utils/FolderData";
 import NotesTreeNode from "~/components/NotesTreeNode.vue";
 
 const selectedKeyState = useState<string | null>("selectedKey", () => null);
-const selectedSortMethod = useState<string>("selectedSortMethod", () => "title-asc");
+const selectedSortMethod = useState<string>("selectedSortMethod", () => "created-desc");
 const props = defineProps<{
   nodeRefsFn: (key: string, el: InstanceType<typeof NotesTreeNode>) => void;
 }>();
