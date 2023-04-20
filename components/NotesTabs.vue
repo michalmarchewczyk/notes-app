@@ -41,6 +41,16 @@ watch(
   { immediate: true }
 );
 
+watchArray(
+  notes,
+  (_, __, added, removed) => {
+    if (!added[0] && removed[0]) {
+      closeTab(removed[0].id);
+    }
+  },
+  { deep: true }
+);
+
 async function closeTab(key: string) {
   loading.value = true;
   const newNoteTabs = noteTabs.value.filter((note) => note !== key);

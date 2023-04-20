@@ -79,6 +79,9 @@ const items = computed<MenuItem[]>(() => [
 </template>
 
 <style scoped lang="scss">
+:global(.folder-contextmenu) {
+  width: 230px;
+}
 :global(.folder-contextmenu::before) {
   content: attr(data-title);
   display: block;

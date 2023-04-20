@@ -58,6 +58,9 @@ const items = computed<MenuItem[]>(() => [
 </template>
 
 <style scoped lang="scss">
+:global(.note-contextmenu) {
+  width: 230px;
+}
 :global(.note-contextmenu::before) {
   content: attr(data-title);
   display: block;
