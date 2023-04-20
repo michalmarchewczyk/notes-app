@@ -24,8 +24,9 @@ defineExpose({
 
 const emit = defineEmits<{
   (event: "rename", id: string): void;
-  (event: "delete", id: string): void;
 }>();
+
+const { deleteNote } = useSharedNotes();
 
 const items = computed<MenuItem[]>(() => [
   {
@@ -39,7 +40,9 @@ const items = computed<MenuItem[]>(() => [
   {
     label: "Delete",
     icon: "ti ti-trash",
-    command: () => emit("delete", props.note?.id),
+    command: () => {
+      deleteNote(props.note?.id);
+    },
   },
 ]);
 </script>

@@ -24,10 +24,25 @@ defineExpose({
 
 const emit = defineEmits<{
   (event: "rename", id: string): void;
-  (event: "delete", id: string): void;
 }>();
 
+const { deleteFolder, addFolder } = useSharedFolders();
+const { addNote } = useSharedNotes();
+
 const items = computed<MenuItem[]>(() => [
+  {
+    separator: true,
+  },
+  {
+    label: "Add note",
+    icon: "ti ti-file-plus",
+    command: () => addNote(props.folder?.id),
+  },
+  {
+    label: "Add folder",
+    icon: "ti ti-folder-plus",
+    command: () => addFolder(props.folder?.id),
+  },
   {
     separator: true,
   },
@@ -39,7 +54,9 @@ const items = computed<MenuItem[]>(() => [
   {
     label: "Delete",
     icon: "ti ti-trash",
-    command: () => emit("delete", props.folder?.id),
+    command: () => {
+      deleteFolder(props.folder?.id);
+    },
   },
 ]);
 </script>

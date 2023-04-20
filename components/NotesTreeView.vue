@@ -6,8 +6,8 @@ import NoteContextMenu from "~/components/NoteContextMenu.vue";
 import FolderContextMenu from "~/components/FolderContextMenu.vue";
 import NotesTreeNode from "~/components/NotesTreeNode.vue";
 
-const { folders, deleteFolder } = useSharedFolders();
-const { notes, deleteNote } = useSharedNotes();
+const { folders } = useSharedFolders();
+const { notes } = useSharedNotes();
 
 const selectedKey = useState<string | null>("selectedKey", () => null);
 const nodeRefs = ref<Record<string, InstanceType<typeof NotesTreeNode>>>({});
@@ -59,14 +59,12 @@ function openContextMenu(event: MouseEvent) {
       :note="contextNote"
       append-to=".tree-container"
       @rename="(id) => nodeRefs[id]?.enableRename()"
-      @delete="(id) => deleteNote(id)"
     />
     <FolderContextMenu
       ref="folderContextMenu"
       :folder="contextFolder"
       append-to=".tree-container"
       @rename="(id) => nodeRefs[id]?.enableRename()"
-      @delete="(id) => deleteFolder(id)"
     />
   </div>
 </template>
