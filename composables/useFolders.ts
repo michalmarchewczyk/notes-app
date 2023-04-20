@@ -7,7 +7,7 @@ const useFolders = () => {
   const user = useCurrentUser();
   const db = useFirestore();
   const foldersRef = collection(db, "folders");
-  const { notes, updateNoteParent } = useSharedNotes();
+  const { notes, updateNoteParent, deleteNote } = useSharedNotes();
   const confirm = useConfirm();
 
   const foldersQuery = query(foldersRef, where("owner", "==", user.value!.uid), orderBy("created", "asc"));
@@ -46,6 +46,31 @@ const useFolders = () => {
     });
   };
 
+  const deleteFolderRecursive = async (id: string, force = false) => {
+    const folder = folders.value.find((folder) => folder.id === id);
+    if (!folder) return;
+    if (force) {
+      const childNotes = notes.value.filter((note) => note.folder === id);
+      const childFolders = folders.value.filter((f) => f.parent === id);
+      for (const note of childNotes) {
+        await deleteNote(note.id, true);
+      }
+      for (const f of childFolders) {
+        await deleteFolderRecursive(f.id, true);
+      }
+      await deleteDoc(doc(foldersRef, id));
+      return;
+    }
+    confirm.require({
+      message: "Are you sure you want to delete this folder with all its contents?",
+      header: "Delete folder " + folder.title + " with contents?",
+      icon: "ti ti-alert-triangle",
+      accept: async () => {
+        await deleteFolderRecursive(id, true);
+      },
+    });
+  };
+
   const renameFolder = async (id: string, value: string) => {
     const folder = folders.value.find((folder) => folder.id === id);
     if (!folder) return;
@@ -58,7 +83,7 @@ const useFolders = () => {
     await setDoc(doc(foldersRef, id), { parent: value }, { merge: true });
   };
 
-  return { folders, addFolder, deleteFolder, renameFolder, updateFolderParent };
+  return { folders, addFolder, deleteFolder, deleteFolderRecursive, renameFolder, updateFolderParent };
 };
 
 export const useSharedFolders = createSharedComposable(useFolders);

@@ -24,9 +24,13 @@ const useNotes = () => {
     } as Omit<NoteData, "id">);
   };
 
-  const deleteNote = (id: string) => {
+  const deleteNote = async (id: string, force = false) => {
     const note = notes.value.find((note) => note.id === id);
     if (!note) return;
+    if (force) {
+      await deleteDoc(doc(notesRef, id));
+      return;
+    }
     confirm.require({
       message: "Are you sure you want to delete this note?",
       header: "Delete note " + note.title + "?",

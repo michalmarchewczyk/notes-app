@@ -26,7 +26,7 @@ const emit = defineEmits<{
   (event: "rename", id: string): void;
 }>();
 
-const { deleteFolder, addFolder } = useSharedFolders();
+const { deleteFolder, addFolder, deleteFolderRecursive } = useSharedFolders();
 const { addNote } = useSharedNotes();
 
 const items = computed<MenuItem[]>(() => [
@@ -56,6 +56,13 @@ const items = computed<MenuItem[]>(() => [
     icon: "ti ti-trash",
     command: () => {
       deleteFolder(props.folder?.id);
+    },
+  },
+  {
+    label: "Delete with contents",
+    icon: "ti ti-trash-x",
+    command: () => {
+      deleteFolderRecursive(props.folder?.id);
     },
   },
 ]);
