@@ -4,22 +4,21 @@ import NoteData from "~/utils/NoteData";
 import FolderData from "~/utils/FolderData";
 import NotesTreeNode from "~/components/NotesTreeNode.vue";
 
+const selectedKeyState = useState<string | null>("selectedKey", () => null);
+const selectedSortMethod = useState<string>("selectedSortMethod", () => "title-asc");
 const props = defineProps<{
-  selectedKey: string | null;
-  sortMethod: string;
   nodeRefsFn: (key: string, el: InstanceType<typeof NotesTreeNode>) => void;
 }>();
 const emit = defineEmits<{
   (event: "contextmenu", e: MouseEvent): void;
-  (event: "update:selectedKey", value: string | null): void;
 }>();
 
 const { notes } = useSharedNotes();
 const { folders } = useSharedFolders();
 
 const selectedKey = computed<Record<string, boolean>>({
-  get: () => (props.selectedKey ? { [props.selectedKey]: true } : {}),
-  set: (v) => emit("update:selectedKey", Object.keys(v ?? {})[0] ?? null),
+  get: () => (selectedKeyState.value ? { [selectedKeyState.value]: true } : {}),
+  set: (v) => (selectedKeyState.value = Object.keys(v ?? {})[0] ?? null),
 });
 const expandedKeys = ref<Record<string, boolean>>({});
 
@@ -52,12 +51,12 @@ const tree = computed(() => {
   fNodes.forEach((folderNode) => {
     const childrenNotes = nNodes.filter((noteNode) => noteNode.parent === folderNode.key);
     const childrenFolders = fNodes.filter((fNode) => fNode.parent === folderNode.key);
-    folderNode.children = [...childrenFolders, ...childrenNotes].sort(sortMethods[props.sortMethod]);
+    folderNode.children = [...childrenFolders, ...childrenNotes].sort(sortMethods[selectedSortMethod.value]);
   });
   return [
     ...[...fNodes].filter((folderNode) => folderNode.parent === null),
     ...[...nNodes].filter((noteNode) => noteNode.parent === null),
-  ].sort(sortMethods[props.sortMethod]);
+  ].sort(sortMethods[selectedSortMethod.value]);
 });
 
 const nodeElementRefs = ref<Record<string, HTMLDivElement>>({});

@@ -1,11 +1,6 @@
 <script setup lang="ts">
-const props = defineProps<{
-  selectedKey: string | null;
-  sortMethod: "title-asc" | "title-desc" | "created-asc" | "created-desc";
-}>();
-const emit = defineEmits<{
-  (event: "update:sortMethod", value: "title-asc" | "title-desc" | "created-asc" | "created-desc"): void;
-}>();
+const selectedKey = useState<string | null>("selectedKey", () => null);
+const selectedSortMethod = useState<string>("selectedSortMethod", () => "title-asc");
 
 const { addFolder } = useSharedFolders();
 const { addNote } = useSharedNotes();
@@ -13,10 +8,10 @@ const { addNote } = useSharedNotes();
 
 <template>
   <div class="buttons-container">
-    <NotesTreeSortMenu :sort-method="props.sortMethod" @update:sort-method="(v) => emit('update:sortMethod', v)" />
+    <NotesTreeSortMenu v-model:sort-method="selectedSortMethod" />
     <div class="flex-1" />
-    <Button icon="ti ti-folder-plus" text @click="() => addFolder(props.selectedKey)" />
-    <Button icon="ti ti-file-plus" text @click="() => addNote(props.selectedKey)" />
+    <Button icon="ti ti-folder-plus" text @click="() => addFolder(selectedKey)" />
+    <Button icon="ti ti-file-plus" text @click="() => addNote(selectedKey)" />
   </div>
 </template>
 

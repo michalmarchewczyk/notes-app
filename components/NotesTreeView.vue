@@ -9,8 +9,7 @@ import NotesTreeNode from "~/components/NotesTreeNode.vue";
 const { folders, deleteFolder } = useSharedFolders();
 const { notes, deleteNote } = useSharedNotes();
 
-const sortMethod = ref("title-asc");
-const selectedKey = ref<string | null>(null);
+const selectedKey = useState<string | null>("selectedKey", () => null);
 const nodeRefs = ref<Record<string, InstanceType<typeof NotesTreeNode>>>({});
 
 const contextNote = ref<NoteData | null>(null);
@@ -45,19 +44,14 @@ function openContextMenu(event: MouseEvent) {
 <template>
   <div v-on-click-outside="() => (selectedKey = null)" class="tree-container">
     <ConfirmDialog :draggable="false" />
-    <NotesTreeButtons v-model:sort-method="sortMethod" :selected-key="selectedKey" />
+    <NotesTreeButtons />
     <div class="scroll-container">
       <div v-if="notes.length === 0 && folders.length === 0" class="no-notes">
         <i class="ti ti-files"></i>
         <span>No notes found</span>
       </div>
       <ScrollPanel>
-        <NotesTree
-          v-model:selected-key="selectedKey"
-          :sort-method="sortMethod"
-          :node-refs-fn="(key, el) => (nodeRefs[key] = el)"
-          @contextmenu="openContextMenu"
-        />
+        <NotesTree :node-refs-fn="(key, el) => (nodeRefs[key] = el)" @contextmenu="openContextMenu" />
       </ScrollPanel>
     </div>
     <NoteContextMenu
