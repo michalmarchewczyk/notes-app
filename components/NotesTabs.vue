@@ -60,7 +60,7 @@ async function closeTab(key: string) {
   } else {
     navigateTo(`/app/notes/${newLastOpened[newLastOpened.length - 1]}`);
   }
-  activeTab.value = newNoteTabs.findIndex((note) => note === route.params.noteKey);
+  // activeTab.value = newNoteTabs.findIndex((note) => note === route.params.noteKey);
   await userData.update({ noteTabs: newNoteTabs, lastOpened: newLastOpened });
   loading.value = false;
 }
@@ -104,10 +104,10 @@ function tabChange(event: TabViewChangeEvent) {
   overflow: hidden;
   display: block;
   border-radius: 8px;
-  box-shadow: 0 0 2px -0.8px var(--surface-900);
+  box-shadow: 0 0 0 1px var(--surface-200);
   .p-tabview-header-action {
     background: transparent !important;
-    padding: 0.2rem !important;
+    padding: 0 !important;
     max-width: 100%;
     border-radius: 8px !important;
     border-width: 0 !important;
@@ -128,7 +128,8 @@ function tabChange(event: TabViewChangeEvent) {
   flex-direction: row;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.7rem 1rem;
+  padding: 0.9rem 1.2rem;
+  //background: red;
   span {
     flex: 1;
     overflow: hidden;
