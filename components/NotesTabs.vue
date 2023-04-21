@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { TabViewChangeEvent } from "primevue/tabview";
+import NoteData from "~/utils/NoteData";
+import NoteContextMenu from "~/components/NoteContextMenu.vue";
+import NotesTabsTab from "~/components/NotesTabsTab.vue";
 
 const route = useRoute();
 const { notes } = useSharedNotes();
@@ -7,13 +10,6 @@ const userData = useSharedUserData();
 
 const activeTab = ref(-1);
 const loading = ref(false);
-
-const noteTitles = computed(() => {
-  return notes.value.reduce((acc, note) => {
-    acc[note.id] = note.title;
-    return acc;
-  }, {} as Record<string, string>);
-});
 
 const noteTabs = computed(() => {
   return userData.data.value?.noteTabs ?? [];
@@ -60,7 +56,6 @@ async function closeTab(key: string) {
   } else {
     navigateTo(`/app/notes/${newLastOpened[newLastOpened.length - 1]}`);
   }
-  // activeTab.value = newNoteTabs.findIndex((note) => note === route.params.noteKey);
   await userData.update({ noteTabs: newNoteTabs, lastOpened: newLastOpened });
   loading.value = false;
 }
@@ -70,20 +65,36 @@ function tabChange(event: TabViewChangeEvent) {
     navigateTo(`/app/notes/${userData.data.value?.noteTabs?.[event.index]}`);
   }
 }
+
+const tabsRefs = ref<Record<string, InstanceType<typeof NotesTabsTab>>>({});
+
+const contextNote = ref<NoteData | null>(null);
+const noteContextMenu = ref<InstanceType<typeof NoteContextMenu> | null>(null);
+
+function openContextMenu(event: MouseEvent, noteKey: string) {
+  const note = notes.value.find((n) => n.id === noteKey);
+  if (note) {
+    contextNote.value = note ?? null;
+    noteContextMenu.value?.openMenu(event);
+  }
+}
 </script>
 
 <template>
-  <div>
+  <div class="tabs-container">
     <TabView v-if="noteTabs.length > 0" v-model:active-index="activeTab" @tab-change="tabChange">
       <TabPanel v-for="note in noteTabs" :key="note">
         <template #header>
-          <div class="tab" @click.middle.prevent.stop="closeTab(note)">
-            <span>{{ noteTitles[note] ?? "-" }}</span>
-            <Button icon="ti ti-x" severity="secondary" text rounded @click.prevent.stop="closeTab(note)" />
-          </div>
+          <NotesTabsTab
+            :ref="(el) => (tabsRefs[note] = el)"
+            :note="note"
+            @close-tab="closeTab(note)"
+            @contextmenu="openContextMenu($event, note)"
+          />
         </template>
       </TabPanel>
     </TabView>
+    <NoteContextMenu ref="noteContextMenu" :note="contextNote" @rename="(id) => tabsRefs[id]?.enableRename()" />
   </div>
 </template>
 
@@ -119,27 +130,6 @@ function tabChange(event: TabViewChangeEvent) {
     .p-tabview-header-action {
       background: var(--surface-f) !important;
     }
-  }
-}
-
-.tab {
-  max-width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 0.7rem;
-  padding: 0.9rem 1.2rem;
-  //background: red;
-  span {
-    flex: 1;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  button {
-    height: 1.3rem !important;
-    width: 1.3rem !important;
-    padding: 0.2rem 0 !important;
   }
 }
 </style>

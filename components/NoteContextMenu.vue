@@ -5,12 +5,21 @@ import NoteData from "~/utils/NoteData";
 
 const props = defineProps<{
   note: NoteData;
-  appendTo?: string;
 }>();
 
 const menu = ref<ContextMenu | null>(null);
+const instanceLastOpened = ref<number>(0);
+const sharedLastOpened = useState<number>("contextMenu", () => Date.now());
+
+watch(sharedLastOpened, () => {
+  if (instanceLastOpened.value !== sharedLastOpened.value) {
+    closeMenu();
+  }
+});
 
 function openMenu(event: MouseEvent) {
+  instanceLastOpened.value = Date.now();
+  sharedLastOpened.value = Date.now();
   menu.value?.show(event);
 }
 function closeMenu() {
@@ -51,7 +60,7 @@ const items = computed<MenuItem[]>(() => [
   <ContextMenu
     ref="menu"
     :model="items"
-    :append-to="props.appendTo"
+    :global="true"
     class="note-contextmenu"
     :data-title="props.note?.title"
   ></ContextMenu>
@@ -60,6 +69,7 @@ const items = computed<MenuItem[]>(() => [
 <style scoped lang="scss">
 :global(.note-contextmenu) {
   width: 230px;
+  overflow: hidden;
 }
 :global(.note-contextmenu::before) {
   content: attr(data-title);
@@ -67,5 +77,7 @@ const items = computed<MenuItem[]>(() => [
   position: relative;
   padding: 6px 20px;
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

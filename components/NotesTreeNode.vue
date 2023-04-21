@@ -45,7 +45,14 @@ defineExpose({
 
 <template>
   <div v-on-click-outside="disableRename" class="node" @dblclick="enableRename">
-    <InputText v-if="rename" ref="inputRef" v-model="renameValue" @keydown.stop />
+    <InputText
+      v-if="rename"
+      ref="inputRef"
+      v-model="renameValue"
+      @keydown.stop
+      @keyup.enter="disableRename"
+      @keyup.esc="disableRename"
+    />
     <div v-else>
       <span>{{ props.node.label }}</span>
       <span v-if="noteDates">{{ formatDate(props.node.data.created.toDate()) }}</span>

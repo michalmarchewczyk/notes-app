@@ -32,11 +32,9 @@ function openContextMenu(event: MouseEvent) {
   if (note) {
     contextNote.value = note ?? null;
     noteContextMenu.value?.openMenu(event);
-    folderContextMenu.value?.closeMenu();
   } else if (folder) {
     contextFolder.value = folder ?? null;
     folderContextMenu.value?.openMenu(event);
-    noteContextMenu.value?.closeMenu();
   }
 }
 </script>
@@ -54,18 +52,8 @@ function openContextMenu(event: MouseEvent) {
         <NotesTree :node-refs-fn="(key, el) => (nodeRefs[key] = el)" @contextmenu="openContextMenu" />
       </ScrollPanel>
     </div>
-    <NoteContextMenu
-      ref="noteContextMenu"
-      :note="contextNote"
-      append-to=".tree-container"
-      @rename="(id) => nodeRefs[id]?.enableRename()"
-    />
-    <FolderContextMenu
-      ref="folderContextMenu"
-      :folder="contextFolder"
-      append-to=".tree-container"
-      @rename="(id) => nodeRefs[id]?.enableRename()"
-    />
+    <NoteContextMenu ref="noteContextMenu" :note="contextNote" @rename="(id) => nodeRefs[id]?.enableRename()" />
+    <FolderContextMenu ref="folderContextMenu" :folder="contextFolder" @rename="(id) => nodeRefs[id]?.enableRename()" />
   </div>
 </template>
 

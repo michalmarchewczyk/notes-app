@@ -5,12 +5,21 @@ import FolderData from "~/utils/FolderData";
 
 const props = defineProps<{
   folder: FolderData;
-  appendTo?: string;
 }>();
 
 const menu = ref<ContextMenu | null>(null);
+const instanceLastOpened = ref<number>(0);
+const sharedLastOpened = useState<number>("contextMenu", () => Date.now());
+
+watch(sharedLastOpened, () => {
+  if (instanceLastOpened.value !== sharedLastOpened.value) {
+    closeMenu();
+  }
+});
 
 function openMenu(event: MouseEvent) {
+  instanceLastOpened.value = Date.now();
+  sharedLastOpened.value = Date.now();
   menu.value?.show(event);
 }
 function closeMenu() {
@@ -72,7 +81,7 @@ const items = computed<MenuItem[]>(() => [
   <ContextMenu
     ref="menu"
     :model="items"
-    :append-to="props.appendTo"
+    :global="true"
     class="folder-contextmenu"
     :data-title="props.folder?.title"
   ></ContextMenu>
@@ -81,6 +90,7 @@ const items = computed<MenuItem[]>(() => [
 <style scoped lang="scss">
 :global(.folder-contextmenu) {
   width: 230px;
+  overflow: hidden;
 }
 :global(.folder-contextmenu::before) {
   content: attr(data-title);
@@ -88,5 +98,7 @@ const items = computed<MenuItem[]>(() => [
   position: relative;
   padding: 6px 20px;
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
