@@ -132,9 +132,22 @@ function onDragStart(event: DragEvent) {
   }
 }
 
+function isParent(data: FolderData, id: string): boolean {
+  if (data.id === id) {
+    return true;
+  }
+  if (data.parent) {
+    const parent = folders.value.find((f) => f.id === data.parent);
+    if (parent) {
+      return isParent(parent, id);
+    }
+  }
+  return false;
+}
+
 function onDrop(e: any) {
   const nodeKey = currentDropTarget.value?.querySelector(".p-treenode-label > div")?.getAttribute("data-node");
-  let folder: { id: string | null } | undefined = folders.value.find((f) => f.id === nodeKey);
+  let folder: FolderData | { id: null } | undefined = folders.value.find((f) => f.id === nodeKey);
   if (currentDropTarget.value?.classList.contains("p-tree")) {
     folder = { id: null };
   }
@@ -146,7 +159,7 @@ function onDrop(e: any) {
   const folderToMove = folders.value.find((f) => f.id === key);
   if (noteToMove) {
     updateNoteParent(noteToMove.id, folder.id);
-  } else if (folderToMove && folderToMove.id !== folder.id) {
+  } else if (folderToMove && folderToMove.id !== folder.id && (!folder.id || !isParent(folder, folderToMove.id))) {
     updateFolderParent(folderToMove.id, folder.id);
   }
   currentDropTarget.value = null;
