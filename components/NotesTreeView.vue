@@ -72,6 +72,8 @@ function openContextMenu(event: MouseEvent) {
 .p-scrollpanel {
   height: 100%;
   max-height: 100%;
+  width: 100%;
+  max-width: 100%;
   margin-right: 6px;
   :deep(.p-scrollpanel-bar) {
     background-color: var(--bluegray-200);

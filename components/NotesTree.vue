@@ -245,9 +245,16 @@ watch(
     margin-left: -0.2rem;
     margin-right: 0.2rem !important;
   }
+  :deep(.p-tree-wrapper) {
+    overflow: visible;
+  }
+  :deep(.p-tree-container) {
+    overflow: visible;
+  }
   :deep(.p-treenode) {
     padding: 2px !important;
     border-radius: 6px;
+    min-width: 140px;
   }
   :deep(.p-treenode.drop-active) {
     padding: 0 !important;
