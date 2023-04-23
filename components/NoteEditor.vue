@@ -85,6 +85,7 @@ const enabledFormats = [
         :modules="{
           QuillMarkdown: true,
         }"
+        placeholder="Start typing..."
         @load="loadEditor"
       >
         <template #toolbar>
