@@ -35,6 +35,7 @@ async function disableRename() {
     } else {
       await renameFolder(props.node.data.id, renameValue.value);
     }
+    renameValue.value = "";
   }
 }
 

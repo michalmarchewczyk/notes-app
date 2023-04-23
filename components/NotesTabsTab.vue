@@ -23,7 +23,6 @@ const renameValue = ref<string>("");
 const inputRef = ref<{ $el: HTMLInputElement } | null>(null);
 
 async function enableRename() {
-  console.log("enableRename", props.note);
   rename.value = true;
   renameValue.value = noteTitles.value[props.note] ?? "";
   await nextTick();
@@ -34,6 +33,7 @@ async function disableRename() {
   rename.value = false;
   if (noteTitles.value[props.note] !== renameValue.value && renameValue.value !== "") {
     await renameNote(props.note, renameValue.value);
+    renameValue.value = "";
   }
 }
 
