@@ -248,5 +248,29 @@ watch(
     flex: 1;
     overflow: hidden;
   }
+  :deep(.p-treenode-children) {
+    position: relative;
+    padding-left: 1.3rem;
+  }
+  :deep(.p-treenode-children::before) {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 18px;
+    width: 2px;
+    height: calc(100% - 0px);
+    background: var(--surface-300);
+  }
+  :deep(.p-treenode-children::after) {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: -2px;
+    left: 18px;
+    width: 10px;
+    height: 2px;
+    background: var(--surface-300);
+  }
 }
 </style>
