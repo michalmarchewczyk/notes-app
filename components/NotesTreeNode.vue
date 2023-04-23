@@ -89,14 +89,14 @@ defineExpose({
       text-overflow: ellipsis;
       margin-top: 0.2rem;
       margin-bottom: 0.2rem;
-      flex-shrink: 0;
+      flex-shrink: 1;
     }
     span:nth-child(2) {
       margin-left: 0.3rem;
       font-size: 0.8rem;
       color: var(--text-color-secondary) !important;
       opacity: 0.7;
-      flex-shrink: 1;
+      flex-shrink: 100000;
     }
   }
 }

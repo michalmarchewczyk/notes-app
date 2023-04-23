@@ -13,8 +13,8 @@ const emit = defineEmits<{
   (event: "contextmenu", e: MouseEvent): void;
 }>();
 
-const { notes } = useSharedNotes();
-const { folders } = useSharedFolders();
+const { notes, updateNoteParent } = useSharedNotes();
+const { folders, updateFolderParent } = useSharedFolders();
 
 const selectedKey = computed<Record<string, boolean>>({
   get: () => (selectedKeyState.value ? { [selectedKeyState.value]: true } : {}),
@@ -32,6 +32,7 @@ function getNode(data: NoteData | FolderData) {
     collapsedIcon: "ti ti-chevron-right",
     expandedIcon: "ti ti-chevron-down",
     type: "parent" in data ? "folder" : "note",
+    styleClass: "parent" in data ? "folder-node" : "note-node",
     parent: "parent" in data ? data.parent : data.folder,
     data,
     children: [],
@@ -59,7 +60,7 @@ const tree = computed(() => {
   ].sort(sortMethods[selectedSortMethod.value]);
 });
 
-const nodeElementRefs = ref<Record<string, HTMLDivElement>>({});
+const nodeElementRefs = ref<Record<string, HTMLDivElement | null>>({});
 
 function addNode(id: string, parent: string | null) {
   selectedKey.value = { [id]: true };
@@ -112,6 +113,88 @@ function openNode(node: TreeNode) {
     navigateTo(`/app/notes/${node.key}`);
   }
 }
+
+async function refNode(key: string, el: HTMLDivElement | null) {
+  nodeElementRefs.value[key] = el;
+  await nextTick();
+  const node = el?.parentElement?.parentElement?.parentElement;
+  if (node) {
+    node.draggable = true;
+    node.ondragstart = onDragStart;
+  }
+}
+
+function onDragStart(event: DragEvent) {
+  const element = event.target as HTMLElement;
+  const nodeKey = element.querySelector(".p-treenode-label > div")?.getAttribute("data-node");
+  if (nodeKey) {
+    event.dataTransfer?.setData("text/plain", nodeKey);
+  }
+}
+
+function onDrop(e: any) {
+  const nodeKey = currentDropTarget.value?.querySelector(".p-treenode-label > div")?.getAttribute("data-node");
+  let folder: { id: string | null } | undefined = folders.value.find((f) => f.id === nodeKey);
+  if (currentDropTarget.value?.classList.contains("p-tree")) {
+    folder = { id: null };
+  }
+  if (!folder) {
+    return;
+  }
+  const key = e.dataTransfer.getData("text/plain");
+  const noteToMove = notes.value.find((n) => n.id === key);
+  const folderToMove = folders.value.find((f) => f.id === key);
+  if (noteToMove) {
+    updateNoteParent(noteToMove.id, folder.id);
+  } else if (folderToMove && folderToMove.id !== folder.id) {
+    updateFolderParent(folderToMove.id, folder.id);
+  }
+  currentDropTarget.value = null;
+}
+
+const currentDropTarget = ref<HTMLElement | null>(null);
+
+function onDragOver(event: MouseEvent) {
+  let element = event.target as HTMLElement;
+  let count = 0;
+  while (
+    count < 6 &&
+    element.parentElement &&
+    !element.classList.contains("p-treenode") &&
+    !element.classList.contains("p-tree")
+  ) {
+    element = element.parentElement;
+    count += 1;
+  }
+  if (element.classList.contains("p-treenode") && element.children[0]?.classList.contains("folder-node")) {
+    currentDropTarget.value = element;
+  } else if (
+    element.classList.contains("p-treenode") &&
+    element.children[0]?.classList.contains("note-node") &&
+    element.parentElement?.parentElement?.classList.contains("p-treenode")
+  ) {
+    currentDropTarget.value = element.parentElement?.parentElement ?? null;
+  } else if (
+    element.classList.contains("p-treenode") &&
+    element.children[0]?.classList.contains("note-node") &&
+    element.parentElement?.parentElement?.parentElement?.classList.contains("p-tree")
+  ) {
+    currentDropTarget.value = element.parentElement?.parentElement?.parentElement ?? null;
+  } else if (element.classList.contains("p-tree")) {
+    currentDropTarget.value = element;
+  } else {
+    currentDropTarget.value = null;
+  }
+}
+
+watch(
+  currentDropTarget,
+  (newEl, prevEl) => {
+    prevEl?.classList.remove("drop-active");
+    newEl?.classList.add("drop-active");
+  },
+  { immediate: true }
+);
 </script>
 
 <template>
@@ -122,9 +205,13 @@ function openNode(node: TreeNode) {
     selection-mode="single"
     @node-select="openNode"
     @contextmenu="(e) => emit('contextmenu', e)"
+    @drop="onDrop"
+    @dragover.prevent="onDragOver"
+    @dragenter.prevent
+    @dragend.prevent="currentDropTarget = null"
   >
     <template #default="slotProps">
-      <div :ref="(el) => (nodeElementRefs[slotProps.node.key] = el)" :data-node="slotProps.node.key">
+      <div :ref="(el) => refNode(slotProps.node.key, el)" :data-node="slotProps.node.key">
         <NotesTreeNode :ref="(el) => props.nodeRefsFn(slotProps.node.key, el)" :node="slotProps.node" />
       </div>
     </template>
@@ -134,10 +221,24 @@ function openNode(node: TreeNode) {
 <style scoped lang="scss">
 .p-tree {
   border: none;
-  padding: 0.3rem;
+  padding: 0;
+  margin: 4px;
+  min-height: calc(100% - 8px);
+  &.drop-active {
+    margin: 2px;
+    border: 2px dashed var(--surface-400);
+  }
   :deep(.p-tree-toggler) {
     margin-left: -0.2rem;
     margin-right: 0.2rem !important;
+  }
+  :deep(.p-treenode) {
+    padding: 2px !important;
+    border-radius: 6px;
+  }
+  :deep(.p-treenode.drop-active) {
+    padding: 0 !important;
+    border: 2px dashed var(--surface-400);
   }
   :deep(.p-treenode-content) {
     padding-top: 0.3rem !important;
