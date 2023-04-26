@@ -13,8 +13,8 @@ const emit = defineEmits<{
   (event: "contextmenu", e: MouseEvent): void;
 }>();
 
-const { notes, updateNoteParent } = useSharedNotes();
-const { folders, updateFolderParent } = useSharedFolders();
+const { notes, updateNoteParent, deleteNote } = useSharedNotes();
+const { folders, updateFolderParent, deleteFolder } = useSharedFolders();
 
 const selectedKey = computed<Record<string, boolean>>({
   get: () => (selectedKeyState.value ? { [selectedKeyState.value]: true } : {}),
@@ -208,6 +208,20 @@ watch(
   },
   { immediate: true }
 );
+
+function deleteSelected() {
+  const selected = Object.keys(selectedKey.value)?.[0];
+  if (!selected) {
+    return;
+  }
+  const note = notes.value.find((n) => n.id === selected);
+  const folder = folders.value.find((f) => f.id === selected);
+  if (note) {
+    deleteNote(note.id);
+  } else if (folder) {
+    deleteFolder(folder.id);
+  }
+}
 </script>
 
 <template>
@@ -222,6 +236,7 @@ watch(
     @dragover.prevent="onDragOver"
     @dragenter.prevent
     @dragend.prevent="currentDropTarget = null"
+    @keyup.delete="deleteSelected"
   >
     <template #default="slotProps">
       <div :ref="(el) => refNode(slotProps.node.key, el)" :data-node="slotProps.node.key">
