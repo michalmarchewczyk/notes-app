@@ -11,11 +11,29 @@ const userData = useSharedUserData();
 const activeTab = ref(-1);
 const loading = ref(false);
 
+const noteTitles = computed(() => {
+  return notes.value.reduce((acc, note) => {
+    acc[note.id] = note.title;
+    return acc;
+  }, {} as Record<string, string>);
+});
+
 const noteTabs = computed(() => {
   return userData.data.value?.noteTabs ?? [];
 });
 const lastOpened = computed(() => {
   return userData.data.value?.lastOpened ?? [];
+});
+
+useHead({
+  title: computed(() => {
+    if (activeTab.value === -1) {
+      return "Notes";
+    } else {
+      const noteTitle = noteTitles.value[noteTabs.value[activeTab.value]];
+      return noteTitle ? noteTitle + " - Notes" : "Notes";
+    }
+  }),
 });
 
 watch(
