@@ -1,6 +1,10 @@
 @mixin editor-styles {
   color: var(--text-color);
   font-size: 16px;
+  *::selection {
+	color: var(--surface-100);
+	background: var(--surface-900);
+  }
 
   h1 {
 	font-size: 38px;
@@ -49,7 +53,7 @@
 	font-weight: 500;
   }
   a {
-	color: var(--primary-color);
+	color: var(--primary-color) !important;
 	font-weight: 600;
   }
 }
