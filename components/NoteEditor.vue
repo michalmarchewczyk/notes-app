@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import Quill from "quill";
 import QuillMarkdown from "quilljs-markdown";
+import Editor, { EditorSelectionChangeEvent } from "primevue/editor";
+import NoteEditorTooltip from "~/components/NoteEditorTooltip.vue";
 
 Quill.register("modules/QuillMarkdown", QuillMarkdown, true);
 
@@ -59,6 +61,31 @@ watch(
   { immediate: true }
 );
 
+const editorComponent = ref<InstanceType<typeof Editor> | undefined>();
+const currentSelectionPosition = reactive<{
+  visible: boolean;
+  left: number;
+  top: number;
+}>({
+  visible: false,
+  left: 0,
+  top: 0,
+});
+
+function onSelectionChange(event: EditorSelectionChangeEvent) {
+  if (event.range && event.range.length > 0) {
+    const bounds = editorInstance?.getBounds(event.range.index, event.range.length);
+    const editorRect = editorComponent.value?.$el.getBoundingClientRect();
+    if (bounds) {
+      currentSelectionPosition.visible = true;
+      currentSelectionPosition.top = bounds.top + bounds.height + 10 + editorRect.top;
+      currentSelectionPosition.left = bounds.left + (bounds.right - bounds.left) / 2 + -106 + editorRect.left;
+    }
+  } else {
+    currentSelectionPosition.visible = false;
+  }
+}
+
 const enabledFormats = [
   "bold",
   "italic",
@@ -80,6 +107,7 @@ const enabledFormats = [
   <div class="editor-container">
     <ScrollPanel>
       <Editor
+        ref="editorComponent"
         v-model="contentValue"
         :formats="enabledFormats"
         :modules="{
@@ -87,9 +115,20 @@ const enabledFormats = [
         }"
         placeholder="Start typing..."
         @load="loadEditor"
+        @selection-change="onSelectionChange"
       >
         <template #toolbar>
           <NoteEditorToolbar />
+          <div
+            class="selection-tooltip"
+            :style="{
+              visibility: currentSelectionPosition.visible ? 'visible' : 'hidden',
+              top: currentSelectionPosition.top + 'px',
+              left: currentSelectionPosition.left + 'px',
+            }"
+          >
+            <NoteEditorTooltip />
+          </div>
         </template>
       </Editor>
     </ScrollPanel>
@@ -99,6 +138,11 @@ const enabledFormats = [
 
 <style scoped lang="scss">
 @import "../assets/editor-styles.scss";
+.selection-tooltip {
+  position: fixed;
+  width: 212px;
+  height: 96px;
+}
 .editor-container {
   height: 100%;
   max-height: 100%;
