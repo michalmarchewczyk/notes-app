@@ -1,0 +1,40 @@
+@mixin line-numbers {
+  counter-reset: line;
+  h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre {
+	counter-increment: line;
+	&::before {
+	  content: counter(line);
+	  margin-right: 0.8rem;
+	  font-family: "Jetbrains Mono", monospace;
+	  min-width: 3ch;
+	  display: inline-block;
+	  position: relative;
+	  font-size: 14px;
+	  font-weight: 500;
+	  color: var(--surface-400);
+	  text-align: right;
+	}
+  }
+  ul, ol {
+	margin-left: 2.4rem;
+	&::before {
+	  margin-left: -3.4rem;
+	  float: left;
+	  margin-top: 0.2rem;
+	}
+  }
+  blockquote {
+	margin-left: 2.33rem;
+	&::before {
+	  margin-left: -3.6rem;
+	  margin-right: 2rem;
+	}
+  }
+  pre {
+	margin-left: 2.45rem;
+	&::before {
+	  margin-left: -3.12rem;
+	  margin-right: 1.6rem;
+	}
+  }
+}

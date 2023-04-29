@@ -5,6 +5,7 @@ interface UserData {
   lastOpened: string[];
   theme: "light" | "dark";
   noteDates: boolean;
+  editorLineNumbers: boolean;
 }
 
 const useUserData = () => {

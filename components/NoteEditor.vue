@@ -12,6 +12,10 @@ const props = defineProps<{
 
 const noteData = useNoteData(props.noteKey);
 
+const userData = useSharedUserData();
+
+const editorLineNumbers = computed(() => !!userData.data.value?.editorLineNumbers);
+
 const contentValue = ref("");
 
 const saving = ref(false);
@@ -114,6 +118,9 @@ const enabledFormats = [
           QuillMarkdown: true,
         }"
         placeholder="Start typing..."
+        :class="{
+          'line-numbers': editorLineNumbers,
+        }"
         @load="loadEditor"
         @selection-change="onSelectionChange"
       >
@@ -138,6 +145,7 @@ const enabledFormats = [
 
 <style scoped lang="scss">
 @import "../assets/editor-styles.scss";
+@import "../assets/line-numbers.scss";
 .selection-tooltip {
   position: fixed;
   width: 212px;
@@ -197,6 +205,13 @@ const enabledFormats = [
     }
     .ql-tooltip {
       @include editor-tooltip-styles;
+    }
+  }
+  &.line-numbers {
+    :deep(.p-editor-content) {
+      .ql-editor {
+        @include line-numbers;
+      }
     }
   }
 }

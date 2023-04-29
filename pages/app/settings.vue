@@ -22,6 +22,7 @@ function closeSettings() {
       <SettingsProfilePhoto />
       <Divider />
       <SettingsNoteDates />
+      <SettingsEditorLineNumbers />
     </div>
   </ScrollPanel>
 </template>
@@ -46,8 +47,11 @@ function closeSettings() {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.75rem;
   padding: 2rem 2rem 4rem;
+  .p-divider {
+    margin: 0.5rem 0;
+  }
 
   .header {
     display: flex;
