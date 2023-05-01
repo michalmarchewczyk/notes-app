@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import hljs from "highlight.js/lib/common";
+// eslint-disable-next-line import/no-named-as-default
 import Quill from "quill";
 import QuillMarkdown from "quilljs-markdown";
 import Editor, { EditorSelectionChangeEvent } from "primevue/editor";
@@ -95,7 +97,6 @@ const enabledFormats = [
   "italic",
   "underline",
   "strike",
-  "color",
   "script",
   "link",
   "code",
@@ -116,6 +117,9 @@ const enabledFormats = [
         :formats="enabledFormats"
         :modules="{
           QuillMarkdown: true,
+          syntax: {
+            highlight: (text) => hljs.highlightAuto(text).value,
+          },
         }"
         placeholder="Start typing..."
         :class="{
@@ -144,6 +148,7 @@ const enabledFormats = [
 </template>
 
 <style scoped lang="scss">
+@import "../assets/syntax-colors.scss";
 @import "../assets/editor-styles.scss";
 @import "../assets/line-numbers.scss";
 .selection-tooltip {

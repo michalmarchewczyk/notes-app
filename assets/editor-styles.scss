@@ -49,8 +49,14 @@
   }
   pre {
 	background-color: var(--bluegray-900);
-	font-family: "Jetbrains Mono", monospace;
+	border-radius: 8px;
+	padding: 8px 12px;
+	font-family: "Jetbrains Mono", monospace !important;
 	font-weight: 500;
+	span {
+	  font-family: "Jetbrains Mono", monospace !important;
+	  font-weight: 500;
+	}
   }
   a {
 	color: var(--primary-color) !important;
